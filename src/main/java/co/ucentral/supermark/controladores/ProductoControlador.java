@@ -1,4 +1,5 @@
 package co.ucentral.supermark.controladores;
+
 import co.ucentral.supermark.SupermarkApplication;
 import co.ucentral.supermark.servicios.ServicioProducto;
 import co.ucentral.supermark.persistencia.entidades.Producto;
@@ -16,21 +17,23 @@ import java.util.List;
 @Controller
 public class ProductoControlador {
 
-
     private static final Logger log = LogManager.getLogger(SupermarkApplication.class);
-    ServicioProducto servicioProducto;
+    private final ServicioProducto servicioProducto;
 
-    @GetMapping({"/PRODUCTOS"})
-    public String obtenerTodos(Model model){
-        List<Producto> listado =  servicioProducto.obtenerTodos();
-        model.addAttribute("misproductos",listado);
-        log.debug(" listado consultado "+listado.size());
+    @GetMapping("/supermark")
+    public String mostrarInicio() {
+        return "index.html";
+    }
+
+    @GetMapping("/PRODUCTOS")
+    public String obtenerTodos(Model model) {
+        List<Producto> listado = servicioProducto.obtenerTodos();
+        model.addAttribute("misproductos", listado);
+        log.debug("Listado de productos consultado: " + listado.size());
         return "pageproductos";
     }
-    public List<Producto> obtenerTodos1(){
+
+    public List<Producto> obtenerTodos1() {
         return servicioProducto.obtenerTodos();
-
     }
-
-
 }
