@@ -5,6 +5,9 @@ import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
 class SupermarkApplicationTests {
+	SupermarkApplicationTests() {
+
+	}
 
 	@Test
 	void contextLoads() {
