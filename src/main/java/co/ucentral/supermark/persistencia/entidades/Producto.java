@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-@Table(name = "PRODUCTOS")
+@Table(name = "productos")
 @Entity
 public class Producto {
 
