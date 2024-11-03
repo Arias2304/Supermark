@@ -5,6 +5,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/estilos.css}">
+    <style> /* Configuracion de la vista de los botones */
+        .btn-custom {
+            background-color: #a93100;
+            color: white;
+            font-family: 'Roboto', sans-serif;
+            border: none;
+            padding: 20px 12px;
+            font-size: 20px;
+        }
+        .btn-custom:hover {
+            background-color: #8c2500;
+        }
+    </style>
 </head>
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -12,25 +27,35 @@
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" th:href="@{/productos}">Productos</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/proveedores}">Proveedores</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" th:href="@{/contacto}">Contacto</a>
+                <a class="nav-link" th:href="@{/productos}">ALERTAS</a>
             </li>
         </ul>
     </div>
 </nav>
-<div class="container mt-4">
-    <h1>Bienvenido a Supermark</h1>
-    <p>Seleccione una sección para navegar.</p>
-    <hr>
-    <h2>Opciones</h2>
-    <a class="btn btn-primary" th:href="@{/pageproductos}">Listado de Productos</a>
-    <a class="btn btn-secondary" th:href="@{/proveedores}">Listado de Proveedores</a>
+
+<div class="container text-center mt-custom" style="margin-top: 300px;">
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <a class="btn btn-custom w-100" th:href="@{/pageproductos}">INVENTARIOS</a>
+        </div>
+        <div class="col-md-4 mb-4">
+            <a class="btn btn-custom w-100" th:href="@{/proveedores}">PROVEEDORES</a>
+        </div>
+        <div class="col-md-4 mb-4">
+            <a class="btn btn-custom w-100" th:href="@{/pageclientes}">CLIENTES</a>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4 mb-4">
+            <a class="btn btn-custom w-100" th:href="@{/pageventas}">VENTAS</a>
+        </div>
+        <div class="col-md-4 mb-4">
+            <a class="btn btn-custom w-100" th:href="@{/pagesugerencias}">SUGERENCIAS DE PROMOCION</a>
+        </div>
+        <div class="col-md-4 mb-4">
+            <a class="btn btn-custom w-100" th:href="@{/pagefidelizacion}">FIDELIZACIÓN</a>
+        </div>
+    </div>
 </div>
 </body>
 </html>
-
