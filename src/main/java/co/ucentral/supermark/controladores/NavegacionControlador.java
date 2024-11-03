@@ -16,14 +16,6 @@ public class NavegacionControlador {
         return "productos";
     }
 
-    @GetMapping("/proveedores")
-    public String proveedores() {
-        return "proveedores";
-    }
 
-    @GetMapping("/contacto")
-    public String contacto() {
-        return "contacto";
-    }
 }
 
