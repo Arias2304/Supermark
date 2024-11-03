@@ -23,28 +23,39 @@
             background-color: #8c2500;
         }
 
-        /* personalizacion de la tablas */
+        /* Personalización de fondo para formulario y tabla */
         .fondo-proveedor {
             background-color: #fcede8;
             padding: 20px;
             border-radius: 5px;
         }
+
+        /* Color de texto general y estilos para títulos */
+        .texto-proveedor {
+            color: #590000;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .titulo-principal {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
-<div class="container mt-4">
-    <h1 class="text-center">Gestión de Proveedores</h1>
+<div class="container texto-proveedor mt-custom" style="margin-top: 100px;">
+
+    <h1 class="text-center titulo-principal">GESTION PROVEEDORES</h1>
 
     <div class="row">
-        /*fomulario de agregar o actualizar los proveedores*/
+        <!-- Formulario para agregar o actualizar proveedor -->
         <div class="col-md-6">
             <div class="card mb-4 fondo-proveedor">
-                <div class="card-header">AGREGAR O ACTUALIZAR UN PROVEEDOR</div>
+                <div class="card-header">Registrar o Actualizar Proveedores</div>
                 <div class="card-body">
                     <form th:action="@{/proveedores/guardar}" th:object="${proveedor}" method="post">
                         <div class="form-group">
                             <label for="nit">NIT</label>
-                            <input type="text" class="form-control" id="nit" th:field="*{nit}" placeholder="Ingrese el NIT" required>
+                            <input type="text" class="form-control" id="nit" th:field="*{nit}" placeholder="Ingrese el NIT sin ountos ni comas" required>
                         </div>
                         <div class="form-group">
                             <label for="nombre">Nombre</label>
@@ -61,7 +72,7 @@
             <a th:href="@{/}" class="btn btn-custom mt-3">Volver al inicio</a>
         </div>
 
-       /*tabla que muestra la lista de proveedores*/
+        <!-- Tabla de proveedores -->
         <div class="col-md-6">
             <div class="fondo-proveedor">
                 <h2 class="text-center">Lista de Proveedores</h2>
