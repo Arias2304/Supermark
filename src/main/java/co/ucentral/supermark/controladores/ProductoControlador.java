@@ -1,39 +1,51 @@
 package co.ucentral.supermark.controladores;
 
-import co.ucentral.supermark.SupermarkApplication;
-import co.ucentral.supermark.servicios.ServicioProducto;
 import co.ucentral.supermark.persistencia.entidades.Producto;
-
+import co.ucentral.supermark.servicios.ServicioProducto;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
-@AllArgsConstructor
 @Controller
+@RequestMapping("/productos")
+@AllArgsConstructor
 public class ProductoControlador {
 
-    private static final Logger log = LogManager.getLogger(SupermarkApplication.class);
-    private final ServicioProducto servicioProducto;
+    private static final Logger log = LogManager.getLogger(ProductoControlador.class);
 
-    @GetMapping("/supermark")
-    public String mostrarInicio() {
-        return "index.html";
+    private final ServicioProducto productoServicio;
+
+    @GetMapping
+    public String listarProductos(Model model) {
+        log.info("Listando todos los productos.");
+        model.addAttribute("productos", productoServicio.obtenerTodos());
+        model.addAttribute("producto", new Producto());
+        return "productos";
     }
 
-    @GetMapping("/PRODUCTOS")
-    public String obtenerTodos(Model model) {
-        List<Producto> listado = servicioProducto.obtenerTodos();
-        model.addAttribute("misproductos", listado);
-        log.debug("Listado de productos consultado: " + listado.size());
-        return "pageproductos";
+    @PostMapping("/guardar")
+    public String guardarProducto(@ModelAttribute Producto producto) {
+        log.info("Guardando producto con código: {}", producto.getCodigo());
+        productoServicio.guardar(producto);
+        return "redirect:/productos";
     }
 
-    public List<Producto> obtenerTodos1() {
-        return servicioProducto.obtenerTodos();
+    @GetMapping("/editar/{codigo}")
+    public String editarProducto(@PathVariable String codigo, Model model) {
+        log.info("Editando producto con código: {}", codigo);
+        Producto producto = productoServicio.buscarPorCodigo(codigo);
+        model.addAttribute("producto", producto);
+        model.addAttribute("productos", productoServicio.obtenerTodos());
+        return "productos";
+    }
+
+    @GetMapping("/eliminar/{codigo}")
+    public String eliminarProducto(@PathVariable String codigo) {
+        log.info("Eliminando producto con código: {}", codigo);
+        productoServicio.borrarPorCodigo(codigo);
+        return "redirect:/productos";
     }
 }

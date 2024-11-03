@@ -15,7 +15,7 @@ public class Producto {
 
     @Id
     @Column(name = "prd_producto")
-    public long codigo;
+    public String codigo;
     @Column(name = "prd_nombre")
     public String nombre;
     @Column(name = "prd_categoria")

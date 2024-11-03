@@ -8,27 +8,52 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
+@Service
+@AllArgsConstructor
+public class ServicioProducto {
 
-    @Service
-    @AllArgsConstructor
-    public class ServicioProducto {
-        private static final Logger log = LogManager.getLogger(ServicioProducto.class);
-        private final ProductoRepositorio productoRepositorio;
+    private static final Logger log = LogManager.getLogger(ServicioProducto.class);
+    private final ProductoRepositorio productoRepositorio;
 
-        public List<Producto> obtenerTodos() {
-            return (List<Producto>) productoRepositorio.findAll();
-        }
-
-        public boolean borrar(Producto producto) {
-            try {
-                productoRepositorio.delete(producto);
-            } catch (Exception e) {
-                log.error(e.getMessage());
-                return false;
-            }
-            return true;
-        }
-
+    public List<Producto> obtenerTodos() {
+        log.info("Obteniendo todos los productos");
+        return (List<Producto>) productoRepositorio.findAll();
     }
 
+    public void guardar(Producto producto) {
+        log.info("Guardando producto con código: {}", producto.getCodigo());
+        productoRepositorio.save(producto);
+    }
+
+    public Producto buscarPorCodigo(String codigo) {
+        log.info("Buscando producto con código: {}", codigo);
+        Optional<Producto> producto = productoRepositorio.findById(codigo);
+        return producto.orElse(null);
+    }
+
+
+    public boolean borrar(Producto producto) {
+        try {
+            log.info("Eliminando producto con código: {}", producto.getCodigo());
+            productoRepositorio.delete(producto);
+            return true;
+        } catch (Exception e) {
+            log.error("Error al eliminar el producto: {}", e.getMessage());
+            return false;
+        }
+    }
+
+
+    public boolean borrarPorCodigo(String codigo) {
+        try {
+            log.info("Eliminando producto con código: {}", codigo);
+            productoRepositorio.deleteById(codigo);
+            return true;
+        } catch (Exception e) {
+            log.error("Error al eliminar el producto con código {}: {}", codigo, e.getMessage());
+            return false;
+        }
+    }
+}
