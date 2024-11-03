@@ -11,11 +11,6 @@ public class NavegacionControlador {
         return "index";
     }
 
-    @GetMapping("/productos")
-    public String productos() {
-        return "productos";
-    }
-
 
 }
 
