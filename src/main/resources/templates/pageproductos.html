@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Lista de Productos</title>
+</head>
+<body>
+<h1>Lista de Productos</h1>
+<table>
+    <thead>
+    <tr>
+        <th>Código</th>
+        <th>Nombre</th>
+        <th>Categoría</th>
+        <th>Cantidad</th>
+        <th>Fecha de Vencimiento</th>
+        <th>Proveedor</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="producto : ${misproductos}">
+        <td th:text="${producto.codigo}"></td>
+        <td th:text="${producto.nombre}"></td>
+        <td th:text="${producto.categoria}"></td>
+        <td th:text="${producto.cantidad}"></td>
+        <td th:text="${producto.venc}"></td>
+        <td th:text="${producto.proveedor.nombre}"></td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
