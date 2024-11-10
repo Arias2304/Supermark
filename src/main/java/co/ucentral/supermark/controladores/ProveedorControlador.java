@@ -18,7 +18,7 @@ public class ProveedorControlador {
     public String listarProveedores(Model model) {
         model.addAttribute("proveedores", proveedorServicio.obtenerTodos());
         model.addAttribute("proveedor", new Proveedor());
-        return "proveedores";  //
+        return "proveedores";
     }
 
     @PostMapping("/guardar")
@@ -28,15 +28,15 @@ public class ProveedorControlador {
     }
 
     @GetMapping("/editar/{nit}")
-    public String editarProveedor(@PathVariable String nit, Model model) {
-        Proveedor proveedor = proveedorServicio.buscarPorNit(nit);
+    public String editarProveedor(@PathVariable int nit, Model model) {
+        Proveedor proveedor = proveedorServicio.buscarPorNit(String.valueOf(nit));
         model.addAttribute("proveedor", proveedor);
         model.addAttribute("proveedores", proveedorServicio.obtenerTodos());
         return "proveedores";
     }
 
     @GetMapping("/eliminar/{nit}")
-    public String eliminarProveedor(@PathVariable String nit) {
+    public String eliminarProveedor(@PathVariable int nit) {
         proveedorServicio.borrarPorNit(nit);
         return "redirect:/proveedores";
     }

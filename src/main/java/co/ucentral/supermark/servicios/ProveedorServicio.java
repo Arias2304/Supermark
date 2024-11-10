@@ -39,9 +39,9 @@ public class ProveedorServicio {
         return true;
     }
 
-    public boolean borrarPorNit(String nit) {
+    public boolean borrarPorNit(int nit) {
         try {
-            proveedorRepositorio.deleteById(nit);
+            proveedorRepositorio.deleteById(String.valueOf(nit));
             return true;
         } catch (Exception e) {
             log.error("Error al borrar el proveedor por NIT: " + e.getMessage());

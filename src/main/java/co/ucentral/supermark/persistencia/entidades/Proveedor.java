@@ -14,7 +14,7 @@ public class Proveedor {
 
     @Id
     @Column(name = "pro_nit")
-    private String nit;
+    private int nit;
     @Column(name = "pro_nombre")
     public String nombre;
     @Column(name = "pro_telefono")
