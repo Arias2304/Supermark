@@ -25,8 +25,8 @@ public class ClienteServicio {
         return clienteRepositorio.save(cliente);
     }
 
-    public Cliente buscarPorId(Integer id) {
-        return clienteRepositorio.findById(id).orElse(null);
+    public Cliente buscarPorId(Integer ID) {
+        return clienteRepositorio.findById(ID).orElse(null);
     }
 
     public boolean borrar(Cliente cliente) {
@@ -39,12 +39,12 @@ public class ClienteServicio {
         return true;
     }
 
-    public boolean borrarPorId(int id) {
+    public boolean borrarPorId(int ID) {
         try {
-            clienteRepositorio.deleteById(id);
+            clienteRepositorio.deleteById(ID);
             return true;
         } catch (Exception e) {
-            log.error("Error al borrar el cliente por ID: " + e.getMessage());
+            log.error("Error al borrar el cliente por ID: {}", e.getMessage());
             return false;
         }
     }

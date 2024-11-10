@@ -2,13 +2,13 @@ package co.ucentral.supermark;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import lombok.extern.slf4j.Slf4j;
+//import lombok.extern.slf4j.Slf4j;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 
 @SpringBootApplication
-@Slf4j
+//@Slf4j
 public class SupermarkApplication {
 
 	private static final Logger log = LogManager.getLogger(SupermarkApplication.class);

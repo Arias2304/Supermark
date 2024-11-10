@@ -27,17 +27,17 @@ public class ClienteControlador {
         return "redirect:/clientes";
     }
 
-    @GetMapping("/editar/{id}")
-    public String editarCliente(@PathVariable int id, Model model) {
-        Cliente cliente = clienteServicio.buscarPorId(id);
+    @GetMapping("/editar/{ID}")
+    public String editarCliente(@PathVariable int ID, Model model) {
+        Cliente cliente = clienteServicio.buscarPorId(ID);
         model.addAttribute("cliente", cliente);
         model.addAttribute("clientes", clienteServicio.obtenerTodos());
         return "clientes";
     }
 
-    @GetMapping("/eliminar/{id}")
-    public String eliminarCliente(@PathVariable int id) {
-        clienteServicio.borrarPorId(id);
+    @GetMapping("/eliminar/{ID}")
+    public String eliminarCliente(@PathVariable int ID) {
+        clienteServicio.borrarPorId(ID);
         return "redirect:/clientes";
     }
 }

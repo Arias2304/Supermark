@@ -54,20 +54,20 @@
         <div class="card-body">
           <form th:action="@{/clientes/guardar}" th:object="${cliente}" method="post">
             <div class="form-group">
-              <label for="id">ID</label>
-              <input type="text" class="form-control" id="id" th:field="*{id}" placeholder="Ingrese el ID del cliente" required>
+              <label for="ID">ID</label>
+              <input type="text" class="form-control" ID="ID" th:field="*{ID}" placeholder="Ingrese el ID del cliente" required>
             </div>
             <div class="form-group">
               <label for="nombre">Nombre</label>
-              <input type="text" class="form-control" id="nombre" th:field="*{nombre}" placeholder="Ingrese el nombre del cliente" required>
+              <input type="text" class="form-control" ID="nombre" th:field="*{nombre}" placeholder="Ingrese el nombre del cliente" required>
             </div>
             <div class="form-group">
               <label for="correo">Correo</label>
-              <input type="email" class="form-control" id="correo" th:field="*{correo}" placeholder="Ingrese el correo electrónico" required>
+              <input type="email" class="form-control" ID="correo" th:field="*{correo}" placeholder="Ingrese el correo electrónico" required>
             </div>
             <div class="form-group">
               <label for="telefono">Teléfono</label>
-              <input type="text" class="form-control" id="telefono" th:field="*{telefono}" placeholder="Ingrese el teléfono" required>
+              <input type="text" class="form-control" ID="telefono" th:field="*{telefono}" placeholder="Ingrese el teléfono" required>
             </div>
             <button type="submit" class="btn btn-custom">Guardar</button>
           </form>
@@ -78,8 +78,7 @@
 
     <!-- Tabla de clientes -->
     <div class="col-md-6">
-      <div class="fondo-cliente">
-        <h2 class="text-center">Lista de Clientes</h2>
+      <h2 class="text-center">Lista de Clientes</h2>
         <table class="table table-bordered table-striped">
           <thead>
           <tr>
@@ -92,20 +91,19 @@
           </thead>
           <tbody>
           <tr th:each="cliente : ${clientes}">
-            <td th:text="${cliente.id}"></td>
+            <td th:text="${cliente.ID}"></td>
             <td th:text="${cliente.nombre}"></td>
             <td th:text="${cliente.correo}"></td>
             <td th:text="${cliente.telefono}"></td>
             <td>
-              <a th:href="@{/clientes/editar/{id}(id=${cliente.id})}" class="btn btn-warning btn-sm">Editar</a>
-              <a th:href="@{/clientes/eliminar/{id}(id=${cliente.id})}" class="btn btn-danger btn-sm"
+              <a th:href="@{/clientes/editar/{ID}(ID=${cliente.ID})}" class="btn btn-warning btn-sm">Editar</a>
+              <a th:href="@{/clientes/eliminar/{ID}(ID=${cliente.ID})}" class="btn btn-danger btn-sm"
                  onclick="return confirm('¿Seguro de que desea eliminar este cliente?');">Eliminar</a>
             </td>
           </tr>
           </tbody>
         </table>
       </div>
-    </div>
   </div>
 </div>
 
