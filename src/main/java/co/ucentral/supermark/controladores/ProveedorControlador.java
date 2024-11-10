@@ -29,7 +29,7 @@ public class ProveedorControlador {
 
     @GetMapping("/editar/{nit}")
     public String editarProveedor(@PathVariable int nit, Model model) {
-        Proveedor proveedor = proveedorServicio.buscarPorNit(String.valueOf(nit));
+        Proveedor proveedor = proveedorServicio.buscarPorNit(nit);
         model.addAttribute("proveedor", proveedor);
         model.addAttribute("proveedores", proveedorServicio.obtenerTodos());
         return "proveedores";

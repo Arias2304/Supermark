@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Supermark - Clientes</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/pagesimple.css}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    /* Personalización botones */
+    .btn-custom {
+        background-color: #a93100;
+        color: white;
+        font-family: 'Roboto', sans-serif;
+        border: none;
+        padding: 10px 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .btn-custom:hover {
+        background-color: #8c2500;
+    }
+
+    /* Personalización de fondo para formulario y tabla */
+    .fondo-cliente {
+        background-color: #fcede8;
+        padding: 20px;
+        border-radius: 5px;
+    }
+
+    /* Color de texto general y estilos para títulos */
+    .texto-cliente {
+        color: #590000;
+        font-family: 'Roboto', sans-serif;
+    }
+
+    .titulo-principal {
+        font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+<div class="container texto-cliente mt-custom" style="margin-top: 100px;">
+
+  <h1 class="text-center titulo-principal">GESTION CLIENTES</h1>
+
+  <div class="row">
+    <!-- Formulario para agregar o actualizar cliente -->
+    <div class="col-md-6">
+      <div class="card mb-4 fondo-cliente">
+        <div class="card-header">Registrar o Actualizar Clientes</div>
+        <div class="card-body">
+          <form th:action="@{/clientes/guardar}" th:object="${cliente}" method="post">
+            <div class="form-group">
+              <label for="id">ID</label>
+              <input type="text" class="form-control" id="id" th:field="*{id}" placeholder="Ingrese el ID del cliente" required>
+            </div>
+            <div class="form-group">
+              <label for="nombre">Nombre</label>
+              <input type="text" class="form-control" id="nombre" th:field="*{nombre}" placeholder="Ingrese el nombre del cliente" required>
+            </div>
+            <div class="form-group">
+              <label for="correo">Correo</label>
+              <input type="email" class="form-control" id="correo" th:field="*{correo}" placeholder="Ingrese el correo electrónico" required>
+            </div>
+            <div class="form-group">
+              <label for="telefono">Teléfono</label>
+              <input type="text" class="form-control" id="telefono" th:field="*{telefono}" placeholder="Ingrese el teléfono" required>
+            </div>
+            <button type="submit" class="btn btn-custom">Guardar</button>
+          </form>
+        </div>
+      </div>
+      <a th:href="@{/}" class="btn btn-custom mt-3">Volver al inicio</a>
+    </div>
+
+    <!-- Tabla de clientes -->
+    <div class="col-md-6">
+      <div class="fondo-cliente">
+        <h2 class="text-center">Lista de Clientes</h2>
+        <table class="table table-bordered table-striped">
+          <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Correo</th>
+            <th>Teléfono</th>
+            <th>Acciones</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr th:each="cliente : ${clientes}">
+            <td th:text="${cliente.id}"></td>
+            <td th:text="${cliente.nombre}"></td>
+            <td th:text="${cliente.correo}"></td>
+            <td th:text="${cliente.telefono}"></td>
+            <td>
+              <a th:href="@{/clientes/editar/{id}(id=${cliente.id})}" class="btn btn-warning btn-sm">Editar</a>
+              <a th:href="@{/clientes/eliminar/{id}(id=${cliente.id})}" class="btn btn-danger btn-sm"
+                 onclick="return confirm('¿Seguro de que desea eliminar este cliente?');">Eliminar</a>
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

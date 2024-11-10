@@ -25,7 +25,7 @@ public class ProveedorServicio {
         return proveedorRepositorio.save(proveedor);
     }
 
-    public Proveedor buscarPorNit(String nit) {
+    public Proveedor buscarPorNit(int nit) {
         return proveedorRepositorio.findById(nit).orElse(null);
     }
 
@@ -41,7 +41,7 @@ public class ProveedorServicio {
 
     public boolean borrarPorNit(int nit) {
         try {
-            proveedorRepositorio.deleteById(String.valueOf(nit));
+            proveedorRepositorio.deleteById(nit);
             return true;
         } catch (Exception e) {
             log.error("Error al borrar el proveedor por NIT: " + e.getMessage());
