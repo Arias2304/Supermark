@@ -46,10 +46,10 @@ public class ServicioProducto {
     }
 
 
-    public boolean borrarPorCodigo(String codigo) {
+    public boolean borrarPorCodigo(int codigo) {
         try {
             log.info("Eliminando producto con código: {}", codigo);
-            productoRepositorio.deleteById(codigo);
+            productoRepositorio.deleteById(String.valueOf(codigo));
             return true;
         } catch (Exception e) {
             log.error("Error al eliminar el producto con código {}: {}", codigo, e.getMessage());
