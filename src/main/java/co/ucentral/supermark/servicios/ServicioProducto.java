@@ -33,7 +33,6 @@ public class ServicioProducto {
         return producto.orElse(null);
     }
 
-
     public boolean borrar(Producto producto) {
         try {
             log.info("Eliminando producto con código: {}", producto.getCodigo());
@@ -45,7 +44,6 @@ public class ServicioProducto {
         }
     }
 
-
     public boolean borrarPorCodigo(String codigo) {
         try {
             log.info("Eliminando producto con código: {}", codigo);
@@ -55,5 +53,23 @@ public class ServicioProducto {
             log.error("Error al eliminar el producto con código {}: {}", codigo, e.getMessage());
             return false;
         }
+    }
+
+    public boolean reducirCantidad(String codigo, int cantidadVendida) {
+        Producto producto = buscarPorCodigo(codigo);
+        if (producto != null && producto.getCantidad() >= cantidadVendida) {
+            producto.setCantidad(producto.getCantidad() - cantidadVendida);
+            guardar(producto);
+            log.info("Reduciendo cantidad del producto con código: {}. Nueva cantidad: {}", codigo, producto.getCantidad());
+            return true;
+        } else {
+            log.warn("Cantidad insuficiente para el producto con código: {}", codigo);
+            return false;
+        }
+    }
+
+    public boolean validarDisponibilidad(String codigo, int cantidadRequerida) {
+        Producto producto = buscarPorCodigo(codigo);
+        return producto != null && producto.getCantidad() >= cantidadRequerida;
     }
 }

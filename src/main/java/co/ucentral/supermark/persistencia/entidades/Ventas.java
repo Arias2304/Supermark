@@ -16,23 +16,23 @@ import java.util.List;
 public class Ventas {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // Genera automáticamente el ID
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_venta")
     private int id;
 
+    @Temporal(TemporalType.DATE)
     @Column(name = "fecha_venta")
     private Date fecha;
 
     @Column(name = "total_venta")
     private double pago;
 
-    // Relación con productos, asumiendo una relación de muchos a muchos
     @ManyToMany
     @JoinTable(
             name = "venta_producto",
             joinColumns = @JoinColumn(name = "venta_id"),
             inverseJoinColumns = @JoinColumn(name = "prd_producto")
     )
-    private List<Producto> Productos;
-}
+    private List<Producto> productos;
 
+}
