@@ -26,6 +26,10 @@ public class Producto {
     public int cantidad;
     @Column(name = "prd_fecvenci")
     public LocalDate venc;
+    @Getter
+    @Setter
+    @Column(name = "prd_alerta")
+    private boolean alerta;
 
     @ManyToOne
     @JoinColumn(name = "pro_nit", referencedColumnName = "pro_nit")

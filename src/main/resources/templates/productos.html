@@ -30,6 +30,13 @@
             border-radius: 5px;
         }
 
+        .fondo-listaproducto {
+            background-color: #fcede8;
+            width: 800px;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
         /* Color de texto general y estilos para títulos */
         .texto-producto {
             color: #590000;
@@ -42,10 +49,9 @@
     </style>
 </head>
 <body>
-<div class="container texto-producto mt-custom" style="margin-top: 100px;">
+<div class="container texto-producto mt-custom" style="margin-top: 60px;">
 
     <h1 class="text-center titulo-principal">GESTIÓN DE PRODUCTOS</h1>
-
     <div class="row">
         <!-- Formulario para agregar o actualizar producto -->
         <div class="col-md-6">
@@ -79,6 +85,7 @@
                                 <option th:each="prov : ${proveedores}" th:value="${prov.nit}" th:text="${prov.nombre}">Seleccionar proveedor</option>
                             </select>
                         </div>
+
                         <button type="submit" class="btn btn-custom">Guardar</button>
                     </form>
                 </div>
@@ -88,7 +95,7 @@
 
         <!-- Tabla de productos -->
         <div class="col-md-6">
-
+            <div class="card mb-4 fondo-listaproducto">
                 <h2 class="text-center">Lista de Productos</h2>
                 <table class="table table-bordered table-striped">
                     <thead>
@@ -111,13 +118,16 @@
                         <td th:text="${producto.venc}"></td>
                         <td th:text="${producto.proveedor.nombre}"></td>
                         <td>
+                            <th:block th:if="${producto.alerta}">
+                                <span class="badge badge-danger">Bajo Stock/Próximo vencimiento</span>
+                            </th:block>
                             <a th:href="@{/productos/editar/{codigo}(codigo=${producto.codigo})}" class="btn btn-warning btn-sm">Editar</a>
-                            <a th:href="@{/productos/eliminar/{codigo}(codigo=${producto.codigo})}" class="btn btn-danger btn-sm"
-                               onclick="return confirm('¿Seguro de que desea eliminar este producto?');">Eliminar</a>
+                            <a th:href="@{/productos/eliminar/{codigo}(codigo=${producto.codigo})}" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro de que desea eliminar este producto?');">Eliminar</a>
                         </td>
                     </tr>
                     </tbody>
                 </table>
+        </div>
         </div>
     </div>
 </div>

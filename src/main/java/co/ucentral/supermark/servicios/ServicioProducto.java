@@ -59,13 +59,18 @@ public class ServicioProducto {
         }
     }
 
-    public List<Producto> obtenerProductosConAlertas() {
-        log.info("Obteniendo productos con alertas de baja cantidad o vencimiento cercano");
+    public List<Producto> obtenerTodosConAlertas() {
         List<Producto> productos = (List<Producto>) productoRepositorio.findAll();
+        LocalDate hoy = LocalDate.now();
 
-        return productos.stream()
-                .filter(p -> p.getCantidad() < 5 ||
-                        (p.getVenc() != null && p.getVenc().isBefore(LocalDate.now().plusDays(5))))
-                .collect(Collectors.toList());
+        productos.forEach(producto -> {
+            if (producto.getCantidad() <= 5 || producto.getVenc().isBefore(hoy.plusDays(5))) {
+                producto.setAlerta(true);
+            }
+        });
+
+        return productos;
     }
+
+
 }

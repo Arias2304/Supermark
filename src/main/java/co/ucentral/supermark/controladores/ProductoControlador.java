@@ -24,6 +24,7 @@ public class ProductoControlador {
         model.addAttribute("misproductos", productoServicio.obtenerTodos());
         model.addAttribute("producto", new Producto());
         model.addAttribute("proveedores", proveedorServicio.obtenerTodos());
+        model.addAttribute("misproductos", productoServicio.obtenerTodosConAlertas());
         return "productos";
     }
 
@@ -38,7 +39,7 @@ public class ProductoControlador {
         Producto producto = productoServicio.buscarPorCodigo(String.valueOf(codigo));
         model.addAttribute("producto", producto);
         model.addAttribute("misproductos", productoServicio.obtenerTodos());
-        model.addAttribute("proveedores", proveedorServicio.obtenerTodos()); // Añadir lista de proveedores
+        model.addAttribute("proveedores", proveedorServicio.obtenerTodos());
         return "productos";
     }
 
@@ -48,10 +49,5 @@ public class ProductoControlador {
         return "redirect:/productos";
     }
 
-    @GetMapping("/alertas")
-    public String mostrarAlertas(Model model) {
-        List<Producto> productosConAlertas = productoServicio.obtenerProductosConAlertas();
-        model.addAttribute("productosConAlertas", productosConAlertas);
-        return "alertas";
-    }
+
 }
