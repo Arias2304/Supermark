@@ -7,8 +7,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -55,5 +57,15 @@ public class ServicioProducto {
             log.error("Error al eliminar el producto con código {}: {}", codigo, e.getMessage());
             return false;
         }
+    }
+
+    public List<Producto> obtenerProductosConAlertas() {
+        log.info("Obteniendo productos con alertas de baja cantidad o vencimiento cercano");
+        List<Producto> productos = (List<Producto>) productoRepositorio.findAll();
+
+        return productos.stream()
+                .filter(p -> p.getCantidad() < 5 ||
+                        (p.getVenc() != null && p.getVenc().isBefore(LocalDate.now().plusDays(5))))
+                .collect(Collectors.toList());
     }
 }

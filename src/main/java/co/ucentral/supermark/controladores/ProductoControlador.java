@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/productos")
 @AllArgsConstructor
@@ -44,5 +46,12 @@ public class ProductoControlador {
     public String eliminarProducto(@PathVariable int codigo) {
         productoServicio.borrarPorCodigo(codigo);
         return "redirect:/productos";
+    }
+
+    @GetMapping("/alertas")
+    public String mostrarAlertas(Model model) {
+        List<Producto> productosConAlertas = productoServicio.obtenerProductosConAlertas();
+        model.addAttribute("productosConAlertas", productosConAlertas);
+        return "alertas";
     }
 }

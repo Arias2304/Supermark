@@ -5,6 +5,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
@@ -23,7 +25,7 @@ public class Producto {
     @Column(name = "prd_cantidad")
     public int cantidad;
     @Column(name = "prd_fecvenci")
-    public String venc;
+    public LocalDate venc;
 
     @ManyToOne
     @JoinColumn(name = "pro_nit", referencedColumnName = "pro_nit")

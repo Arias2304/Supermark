@@ -33,19 +33,17 @@ public class ProveedorServicio {
         try {
             proveedorRepositorio.delete(proveedor);
         } catch (Exception e) {
-            log.error("Error al borrar el proveedor: " + e.getMessage());
+            log.error("Error al borrar el proveedor: {}", e.getMessage());
             return false;
         }
         return true;
     }
 
-    public boolean borrarPorNit(int nit) {
+    public void borrarPorNit(int nit) {
         try {
             proveedorRepositorio.deleteById(nit);
-            return true;
         } catch (Exception e) {
-            log.error("Error al borrar el proveedor por NIT: " + e.getMessage());
-            return false;
+            log.error("Error al borrar el proveedor por NIT: {}", e.getMessage());
         }
     }
 }
