@@ -1,10 +1,52 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org" lang="">
 <head>
+    <title>Supermark - Página de Ventas</title>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/pagesimple.css}">
+    <style>
+        .container-central {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 40px;
+            border-radius: 10px;
+            max-width: 600px;
+            text-align: center;
+        }
+        
+        .btn-custom {
+            background-color: #a93100;
+            color: white;
+            padding: 15px 30px;
+            font-size: 18px;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        .btn-custom:hover {
+            background-color: #8c2500;
+        }
+
+        .titulo-principal {
+            font-size: 28px;
+            font-weight: bold;
+            color: #590000;
+            margin-bottom: 20px;
+        }
+    </style>
 </head>
 <body>
-
+<div class="d-flex justify-content-center align-items-center vh-100">
+    <div class="container-central">
+        <h1 class="titulo-principal">Gestión de Ventas</h1>
+        <a th:href="@{/registroVentas}" class="btn btn-custom">Registrar Ventas</a>
+        <a th:href="@{/consultaVentas}" class="btn btn-custom">Consultar Ventas</a>
+    </div>
+</div>
 </body>
 </html>
