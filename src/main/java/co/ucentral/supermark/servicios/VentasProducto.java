@@ -1,5 +1,6 @@
 package co.ucentral.supermark.servicios;
 
+import co.ucentral.supermark.persistencia.entidades.Producto;
 import co.ucentral.supermark.persistencia.entidades.Ventas;
 import co.ucentral.supermark.persistencia.repositorios.VentasRepositorio;
 
@@ -24,34 +25,40 @@ public class VentasProducto {
     }
 
     public void registrar(Ventas venta) {
-        log.info("Registrando venta de producto con ID: {}", venta.getId());
+        log.info("Registrando una nueva venta con ID: {}", venta.getId());
         ventasRepositorio.save(venta);
     }
 
+    public void agregarProductosAVenta(Ventas venta, List<Producto> productos) {
+        log.info("Agregando productos a la venta con ID: {}", venta.getId());
+        venta.getProductos().addAll(productos); // Agrega productos a la lista en la venta
+        ventasRepositorio.save(venta); // Guarda la venta con la lista actualizada de productos
+    }
+
     public Ventas buscarPorId(int id) {
-        log.info("Buscando venta de producto con ID: {}", id);
+        log.info("Buscando venta con ID: {}", id);
         Optional<Ventas> venta = ventasRepositorio.findById(id);
         return venta.orElse(null);
     }
 
     public boolean borrar(Ventas venta) {
         try {
-            log.info("Eliminando venta de producto con ID: {}", venta.getId());
+            log.info("Eliminando venta con ID: {}", venta.getId());
             ventasRepositorio.delete(venta);
             return true;
         } catch (Exception e) {
-            log.error("Error al eliminar la venta de producto: {}", e.getMessage());
+            log.error("Error al eliminar la venta: {}", e.getMessage());
             return false;
         }
     }
 
     public boolean borrarPorId(int id) {
         try {
-            log.info("Eliminando venta de producto con ID: {}", id);
+            log.info("Eliminando venta con ID: {}", id);
             ventasRepositorio.deleteById(id);
             return true;
         } catch (Exception e) {
-            log.error("Error al eliminar la venta de producto con ID {}: {}", id, e.getMessage());
+            log.error("Error al eliminar la venta con ID {}: {}", id, e.getMessage());
             return false;
         }
     }
