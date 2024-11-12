@@ -1,13 +1,13 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Supermark - Inicio</title>
+    <title>Supermark - [[${pageTitle}]]</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" th:href="@{/css/estilos.css}">
-    <style> /* Configuracion de la vista de los botones */
+    <style>
         .btn-custom {
             background-color: #a93100;
             color: white;
@@ -24,38 +24,46 @@
 <body>
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
     <a class="navbar-brand" th:href="@{/}">Supermark</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
     <div class="collapse navbar-collapse" id="navbarNav">
         <ul class="navbar-nav">
             <li class="nav-item">
-                <a class="nav-link" th:href="@{/alertas}">ALERTAS</a>
+                <a class="nav-link" th:href="@{/alertas}" aria-label="Alertas">ALERTAS</a>
             </li>
         </ul>
     </div>
 </nav>
 
-<div class="container text-center mt-custom" style="margin-top: 300px;">
+<div class="container text-center" style="margin-top: 300px;">
     <div class="row">
         <div class="col-md-4 mb-4">
-            <a class="btn btn-custom w-100" th:href="@{/productos}">INVENTARIOS</a>
+            <a class="btn btn-custom w-100" th:href="@{/productos}" aria-label="Inventarios">INVENTARIOS</a>
         </div>
         <div class="col-md-4 mb-4">
-            <a class="btn btn-custom w-100" th:href="@{/proveedores}">PROVEEDORES</a>
+            <a class="btn btn-custom w-100" th:href="@{/proveedores}" aria-label="Proveedores">PROVEEDORES</a>
         </div>
         <div class="col-md-4 mb-4">
-            <a class="btn btn-custom w-100" th:href="@{/clientes}">CLIENTES</a>
+            <a class="btn btn-custom w-100" th:href="@{/clientes}" aria-label="Clientes">CLIENTES</a>
         </div>
     </div>
     <div class="row">
         <div class="col-md-4 mb-4">
-            <a class="btn btn-custom w-100" th:href="@{/pageventas}">VENTAS</a>
+            <a class="btn btn-custom w-100" th:href="@{/pageventas}" aria-label="Ventas">VENTAS</a>
         </div>
         <div class="col-md-4 mb-4">
-            <a class="btn btn-custom w-100" th:href="@{/pagesugerencias}">SUGERENCIAS DE PROMOCION</a>
+            <a class="btn btn-custom w-100" th:href="@{/pagesugerencias}" aria-label="Sugerencias de Promoción">SUGERENCIAS DE PROMOCIÓN</a>
         </div>
         <div class="col-md-4 mb-4">
-            <a class="btn btn-custom w-100" th:href="@{/pagefidelizacion}">FIDELIZACIÓN</a>
+            <a class="btn btn-custom w-100" th:href="@{/pagefidelizacion}" aria-label="Fidelización">FIDELIZACIÓN</a>
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js"></script>
 </body>
 </html>
+
+

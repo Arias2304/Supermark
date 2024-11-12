@@ -42,7 +42,7 @@ public class ProductoControlador {
 
     @GetMapping("/eliminar/{codigo}")
     public String eliminarProducto(@PathVariable int codigo) {
-        productoServicio.borrarPorCodigo(codigo);
+        productoServicio.borrarPorCodigo(String.valueOf(codigo));
         return "redirect:/productos";
     }
 }
