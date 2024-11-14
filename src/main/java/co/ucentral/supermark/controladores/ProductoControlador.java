@@ -36,12 +36,16 @@ public class ProductoControlador {
 
     @GetMapping("/editar/{codigo}")
     public String editarProducto(@PathVariable int codigo, Model model) {
-        Producto producto = productoServicio.buscarPorCodigo(String.valueOf(codigo));
+
+        Producto producto = productoServicio.buscarPorCodigo(Integer.valueOf(String.valueOf(codigo)));
+
         model.addAttribute("producto", producto);
         model.addAttribute("misproductos", productoServicio.obtenerTodos());
         model.addAttribute("proveedores", proveedorServicio.obtenerTodos());
+
         return "productos";
     }
+
 
     @GetMapping("/eliminar/{codigo}")
     public String eliminarProducto(@PathVariable int codigo) {

@@ -29,11 +29,12 @@ public class ServicioProducto {
         productoRepositorio.save(producto);
     }
 
-    public Producto buscarPorCodigo(String codigo) {
+    public Producto buscarPorCodigo(Integer codigo) {
         log.info("Buscando producto con código: {}", codigo);
-        Optional<Producto> producto = productoRepositorio.findById(codigo);
-        return producto.orElse(null);
+        return productoRepositorio.findById(codigo).orElse(null);
     }
+
+
 
 
     public boolean borrar(Producto producto) {
@@ -51,7 +52,7 @@ public class ServicioProducto {
     public boolean borrarPorCodigo(int codigo) {
         try {
             log.info("Eliminando producto con código: {}", codigo);
-            productoRepositorio.deleteById(String.valueOf(codigo));
+            productoRepositorio.deleteById(Integer.valueOf(String.valueOf(codigo)));
             return true;
         } catch (Exception e) {
             log.error("Error al eliminar el producto con código {}: {}", codigo, e.getMessage());
