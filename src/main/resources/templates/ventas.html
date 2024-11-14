@@ -7,48 +7,54 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" th:href="@{/css/pagesimple.css}">
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        /* Fondo y estilos generales */
+        /* Estilo General */
         body {
-            background-size: cover;
-            background-attachment: fixed;
-            font-family: Arial, sans-serif;
+            background-color: #fcede8;
+            font-family: 'Roboto', sans-serif;
             color: #333;
         }
         .container {
             background: rgba(255, 255, 255, 0.9);
             padding: 20px;
-            margin: 50px auto;
-            max-width: 800px;
+            margin-top: 30px;
+            max-width: 900px;
             border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
         }
-        h1, h2, h3 {
-            color: #0056b3;
+        .titulo-principal {
+            color: #590000;
+            font-weight: bold;
+            text-align: center;
         }
         .form-group {
             margin-bottom: 15px;
         }
         label {
+            color: #590000;
             font-weight: bold;
-            color: #0056b3;
         }
         input[type="text"], input[type="number"], button {
             width: 100%;
-            padding: 8px;
+            padding: 10px;
             margin: 5px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
         button {
-            background-color: #0056b3;
+            background-color: #a93100;
             color: white;
+            font-size: 16px;
+            font-weight: bold;
             cursor: pointer;
+            border: none;
         }
         button:hover {
-            background-color: #003d80;
+            background-color: #8c2500;
         }
+
+        /* Personalización de tabla */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -60,9 +66,10 @@
             text-align: center;
         }
         th {
-            background-color: #0056b3;
+            background-color: #a93100;
             color: white;
         }
+
         /* Lista de productos seleccionados */
         #listaProductos ul {
             list-style-type: none;
@@ -75,102 +82,90 @@
             border-radius: 5px;
             border: 1px solid #ddd;
         }
+
+        /* Personalización de tarjetas */
+        .card {
+            border-radius: 5px;
+            margin-bottom: 20px;
+        }
+        .card-header {
+            background-color: #a93100;
+            color: white;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
 <div class="container">
-    <h1>Registrar Nueva Venta</h1>
+    <h1 class="titulo-principal">Registrar Nueva Venta</h1>
 
-    <!-- Formulario de Cliente -->
-    <form id="ventaForm" action="/ventas/registrar" method="POST">
-        <div class="form-group">
-            <label for="clienteId">ID Cliente:</label>
-            <input type="number" id="clienteId" name="clienteId" placeholder="Ingrese ID del cliente">
+    <!-- Formulario de Venta -->
+    <div class="card">
+        <div class="card-header">Detalles de la Venta</div>
+        <div class="card-body">
+            <form id="ventaForm" action="/ventas/registrar" method="POST">
+                <div class="form-group">
+                    <label for="clienteId">ID Cliente:</label>
+                    <input type="number" id="clienteId" name="clienteId" placeholder="Ingrese ID del cliente" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="nombreCliente">Nombre Cliente (Opcional):</label>
+                    <input type="text" id="nombreCliente" name="nombreCliente" placeholder="Nombre temporal si el cliente no está registrado">
+                </div>
+
+                <!-- Información de Productos -->
+                <h3>Productos</h3>
+                <div class="form-group">
+                    <label for="productoId">ID Producto:</label>
+                    <input type="number" id="productoId" name="productoId" placeholder="Ingrese ID del producto">
+                    <button type="button" onclick="agregarProducto()">Agregar Producto</button>
+                </div>
+
+                <!-- Lista de Productos Seleccionados -->
+                <div id="listaProductos">
+                    <h4>Lista de Productos Seleccionados</h4>
+                    <!-- Los productos se mostrarán aquí -->
+                </div>
+
+                <!-- Total de la Venta -->
+                <div class="form-group">
+                    <label for="totalVenta">Total de la Venta:</label>
+                    <input type="text" id="totalVenta" name="totalVenta" readonly>
+                    <button type="button" onclick="calcularTotal()">Calcular Total</button>
+                </div>
+
+                <div class="form-group">
+                    <button type="submit">Registrar Venta</button>
+                    <button type="button" onclick="procesarPago()">Pagar</button>
+                </div>
+            </form>
         </div>
-
-        <div class="form-group">
-            <label for="nombreCliente">Nombre Cliente (Opcional):</label>
-            <input type="text" id="nombreCliente" name="nombreCliente" placeholder="Nombre temporal si el cliente no está registrado">
-        </div>
-
-        <!-- Información de Productos -->
-        <h2>Productos</h2>
-        <div class="form-group">
-            <label for="productoId">ID Producto:</label>
-            <input type="number" id="productoId" name="productoId" placeholder="Ingrese ID del producto">
-            <button type="button" onclick="agregarProducto()">Agregar Producto</button>
-        </div>
-
-        <!-- Lista acumulativa de productos -->
-        <div id="listaProductos">
-            <h3>Lista de Productos Seleccionados</h3>
-            <!-- Aquí se mostrarán los productos añadidos por el usuario -->
-        </div>
-
-        <!-- Total de la Venta -->
-        <div class="form-group">
-            <label for="totalVenta">Total de la Venta:</label>
-            <input type="text" id="totalVenta" name="totalVenta" readonly>
-            <button type="button" onclick="calcularTotal()">Calcular Total</button>
-        </div>
-
-        <!-- Botones de acción -->
-        <button type="submit">Registrar</button>
-        <button type="button" onclick="procesarPago()">Pagar</button>
-    </form>
+    </div>
 
     <!-- Tabla de Ventas Anteriores -->
-    <h2>Ventas Anteriores</h2>
-    <table id="tablaVentas">
-        <thead>
-        <tr>
-            <th>ID Venta</th>
-            <th>Fecha</th>
-            <th>Cliente</th>
-            <th>Productos</th>
-            <th>Total</th>
-        </tr>
-        </thead>
-        <tbody>
-        <!-- Filas de ventas se completarán con el servidor -->
-        </tbody>
-    </table>
+    <div class="card">
+        <div class="card-header">Ventas Anteriores</div>
+        <div class="card-body">
+            <table id="tablaVentas">
+                <thead>
+                <tr>
+                    <th>ID Venta</th>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Productos</th>
+                    <th>Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Las filas de ventas se completarán con el servidor -->
+                </tbody>
+            </table>
+        </div>
+    </div>
 </div>
 
-<script>
-    // Lista acumulativa de productos en la venta actual
-    const productosSeleccionados = [];
-
-    function agregarProducto() {
-        const productoId = document.getElementById("productoId").value;
-        if (productoId) {
-            // Lógica para buscar y agregar el producto a la lista
-            productosSeleccionados.push(productoId);
-            actualizarListaProductos();
-            document.getElementById("productoId").value = "";
-        }
-    }
-
-    function actualizarListaProductos() {
-        const listaProductos = document.getElementById("listaProductos");
-        listaProductos.innerHTML = "<h3>Lista de Productos Seleccionados</h3><ul>";
-        productosSeleccionados.forEach(id => {
-            listaProductos.innerHTML += `<li>Producto ID: ${id}</li>`;
-        });
-        listaProductos.innerHTML += "</ul>";
-    }
-
-    function calcularTotal() {
-        // Lógica para calcular el total en base a los productos seleccionados
-        document.getElementById("totalVenta").value = "Total calculado";
-    }
-
-    function procesarPago() {
-        // Lógica para procesar el pago
-        alert("Pago procesado con éxito.");
-    }
-</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
-
-

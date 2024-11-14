@@ -25,7 +25,21 @@ public class VentaControlador {
     private final ServicioProducto productoServicio;
 
 
-    @GetMapping("/nueva")
+
+    @GetMapping
+    public String listarVentas(Model model) {
+        model.addAttribute("ventas",  ventaServicio.obtenerTodas());
+        return "ventas";
+
+    }
+
+    @GetMapping("/ventas")
+    public String mostrarVentas(Model model) {
+        List<Venta> ventas = ventaServicio.obtenerTodas();
+        model.addAttribute("ventas", ventas);
+        return "ventas";
+    }
+        @GetMapping("/nueva")
     public String mostrarFormularioVenta(Model model) {
         List<Cliente> clientes = clienteServicio.obtenerTodos();
         List<Producto> productos = productoServicio.obtenerTodos();
@@ -34,7 +48,7 @@ public class VentaControlador {
         model.addAttribute("productos", productos);
         model.addAttribute("venta", new Venta());
 
-        return "registroVentas";
+        return "ventas";
     }
 
 
@@ -46,7 +60,7 @@ public class VentaControlador {
         Cliente cliente = clienteServicio.buscarPorId(clienteId);
         if (cliente == null) {
             model.addAttribute("error", "Cliente no encontrado");
-            return "registroVentas";
+            return "ventas";
         }
 
         List<Producto> productosSeleccionados = productosIds.stream()
@@ -72,19 +86,6 @@ public class VentaControlador {
         return "redirect:/ventas";
     }
 
-
-    @GetMapping
-    public String listarVentas(Model model) {
-        List<Venta> ventas = ventaServicio.obtenerTodas();
-        model.addAttribute("ventas", ventas);
-        return "consultaVentas";
-    }
-    @GetMapping("/ventas")
-    public String mostrarVentas(Model model) {
-        List<Venta> ventas = ventaServicio.obtenerTodas();
-        model.addAttribute("ventas", ventas);
-        return "ventas"; // Nombre del HTML
-    }
     @PostMapping("/ventas/guardar")
     public String guardarVenta(@ModelAttribute Venta venta, @RequestParam Integer clienteId,
                                @RequestParam List<Integer> productosIds, Model model) {
@@ -95,7 +96,7 @@ public class VentaControlador {
         venta.setCliente(cliente);
         venta.setProductosVendidos(productos);
         double total = productos.stream().mapToDouble(Producto::getPrecio).sum();
-        venta.setTotalVenta(total);
+        venta.setTotalVenta(Double.valueOf(total));
         ventaServicio.guardar(venta);
         return "redirect:/ventas";
     }

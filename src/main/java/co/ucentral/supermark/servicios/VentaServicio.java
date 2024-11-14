@@ -36,7 +36,7 @@ public class VentaServicio {
 
 
         for (Producto producto : productos) {
-            Optional<Producto> productoExistente = productoRepositorio.findById(producto.getCodigo());
+            Optional<Producto> productoExistente = productoRepositorio.findById(Integer.valueOf(producto.getCodigo()));
 
 
 
@@ -63,15 +63,15 @@ public class VentaServicio {
         Venta venta = new Venta();
         venta.setFecha(new Date());
         venta.setProductosVendidos(productos);
-        venta.setTotalVenta(totalVenta);
+        venta.setTotalVenta(Double.valueOf(totalVenta));
 
         Venta ventaRegistrada = ventaRepositorio.save(venta);
-        log.info("Venta registrada exitosamente con ID: {}", ventaRegistrada.getId());
+        log.info("Venta registrada exitosamente con ID: {}", Optional.of(ventaRegistrada.getId()));
 
         return ventaRegistrada;
     }
     public Venta guardar(Venta venta) {
-        log.info("Guardando venta con ID: {}", venta.getId());
+        log.info("Guardando venta con ID: {}", Optional.of(venta.getId()));
         return ventaRepositorio.save(venta);
     }
 
