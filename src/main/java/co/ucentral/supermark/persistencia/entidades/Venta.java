@@ -36,4 +36,5 @@ public class Venta {
             inverseJoinColumns = @JoinColumn(name = "producto_id")
     )
     private List<Producto> productos;
+
 }

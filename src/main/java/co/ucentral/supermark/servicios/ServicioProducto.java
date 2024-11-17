@@ -5,12 +5,12 @@ import co.ucentral.supermark.persistencia.repositorios.ProductoRepositorio;
 import lombok.AllArgsConstructor;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -36,26 +36,12 @@ public class ServicioProducto {
     }
 
 
-    public boolean borrar(Producto producto) {
-        try {
-            log.info("Eliminando producto con código: {}", producto.getCodigo());
-            productoRepositorio.delete(producto);
-            return true;
-        } catch (Exception e) {
-            log.error("Error al eliminar el producto: {}", e.getMessage());
-            return false;
-        }
-    }
-
-
-    public boolean borrarPorCodigo(int codigo) {
+    public void borrarPorCodigo(int codigo) {
         try {
             log.info("Eliminando producto con código: {}", codigo);
             productoRepositorio.deleteById(String.valueOf(codigo));
-            return true;
         } catch (Exception e) {
             log.error("Error al eliminar el producto con código {}: {}", codigo, e.getMessage());
-            return false;
         }
     }
 
@@ -70,6 +56,12 @@ public class ServicioProducto {
         });
 
         return productos;
+    }
+    @Autowired
+    private ProductoRepositorio productoRepository;
+
+    public List<Producto> listarProductos() {
+        return (List<Producto>) productoRepository.findAll();
     }
 
 

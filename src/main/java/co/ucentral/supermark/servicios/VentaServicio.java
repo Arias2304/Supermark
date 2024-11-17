@@ -33,11 +33,11 @@ public class VentaServicio {
     }
 
 
-    public Venta guardarVenta(Venta venta) {
+    public void guardarVenta(Venta venta) {
         log.info("Guardando nueva venta");
         venta.setFechaVenta(LocalDateTime.now());
         venta.setTotal(calcularTotal(venta.getProductos()));
-        return ventaRepositorio.save(venta);
+        ventaRepositorio.save(venta);
     }
 
     public Venta buscarPorId(Long id) {

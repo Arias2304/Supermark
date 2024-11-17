@@ -9,7 +9,11 @@
     <link rel="stylesheet" type="text/css" th:href="@{/css/pagesimple.css}">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
-        /* Personalización de botones */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #fcede8;
+        }
+
         .btn-custom {
             background-color: #a93100;
             color: white;
@@ -19,101 +23,183 @@
             font-size: 16px;
             cursor: pointer;
         }
+
         .btn-custom:hover {
             background-color: #8c2500;
         }
 
-        /* Personalización de fondo para formulario y tabla */
-        .fondo-venta {
+        .fondo {
             background-color: #fcede8;
             padding: 20px;
             border-radius: 5px;
-        }
-        .fondo-listaventas {
-            background-color: #fcede8;
-            width: 600px;
-            padding: 20px;
-            border-radius: 5px;
-        }
-
-        /* Color de texto general y estilos para títulos */
-        .texto-venta {
-            color: #590000;
-            font-family: 'Roboto', sans-serif;
-        }
-
-        .titulo-principal {
-            font-weight: bold;
         }
     </style>
 </head>
 <body>
-<div class="container texto-venta mt-custom" style="margin-top: 60px;">
+<div class="container">
+    <h1 class="text-center mt-4">Registrar Venta</h1>
+    <div class="fondo">
+        <form th:action="@{/ventas/guardar}" method="post">
+            <!-- Seleccionar Cliente -->
+            <div class="mb-3">
+                <label for="clienteId" class="form-label">Cliente</label>
+                <select class="form-control" id="clienteId" name="clienteId" required>
+                    <option value="">Seleccione un cliente</option>
+                    <option th:each="cliente : ${clientes}" th:value="${cliente.ID}" th:text="${cliente.nombre}"></option>
+                </select>
+            </div>
 
-    <h1 class="text-center titulo-principal">Gestión de Ventas</h1>
-
-    <div class="row">
-        <!-- Formulario para buscar ventas y crear nueva venta -->
-        <div class="col-md-6">
-            <div class="card mb-4 fondo-venta">
-                <div class="card-header">Buscar o Registrar Venta</div>
-                <div class="card-body">
-                    <form th:action="@{/ventas/buscar}" method="get">
-                        <div class="form-group">
-                            <label for="buscarID">ID de Venta</label>
-                            <input type="text" class="form-control" id="buscarID" name="ventaId" placeholder="Ingrese ID de venta (opcional)">
-                        </div>
-                        <div class="form-group mt-3">
-                            <label for="buscarCliente">Cliente</label>
-                            <input type="text" class="form-control" id="buscarCliente" name="clienteNombre" placeholder="Ingrese el nombre del cliente">
-                        </div>
-                        <button type="submit" class="btn btn-custom mt-3">Buscar</button>
-                    </form>
+            <!-- Agregar Producto -->
+            <div class="mb-3">
+                <label for="productoId" class="form-label">Producto (ID)</label>
+                <div class="input-group">
+                    <input type="number" class="form-control" id="productoId" placeholder="Ingrese ID del producto">
+                    <button type="button" class="btn btn-primary" id="agregarProducto">Agregar Producto</button>
                 </div>
             </div>
 
-            <!-- Botón de Nueva Venta -->
-            <a th:href="@{/ventas/nueva}" class="btn btn-custom mt-3">Nueva Venta</a>
-            <a th:href="@{ /}" class="btn btn-custom mt-3">Volver al inicio</a>
-        </div>
-
-        <!-- Tabla de ventas registradas -->
-        <div class="col-md-6">
-            <div class="card mb-4 fondo-listaventas">
-                <h2 class="text-center">Lista de Ventas</h2>
-                <table class="table table-bordered table-striped">
+            <!-- Lista de Productos Seleccionados -->
+            <div class="mb-3">
+                <h4>Productos Seleccionados</h4>
+                <table class="table table-striped">
                     <thead>
                     <tr>
-                        <th>ID Venta</th>
-                        <th>Cliente</th>
-                        <th>Productos</th>
+                        <th>ID</th>
+                        <th>Nombre</th>
+                        <th>Cantidad</th>
+                        <th>Precio</th>
                         <th>Total</th>
                         <th>Acciones</th>
                     </tr>
                     </thead>
-                    <tbody>
-                    <tr th:each="venta : ${ventas}">
-                        <td th:text="${venta.id}"></td>
-                        <td th:text="${venta.cliente.nombre}"></td>
-                        <td>
-                            <ul>
-                                <li th:each="producto : ${venta.productos}" th:text="${producto.nombre} + ' - $' + ${producto.precio}"></li>
-                            </ul>
-                        </td>
-                        <td th:text="${venta.total}"></td>
-                        <td>
-                            <a th:href="@{/ventas/detalle/{id}(id=${venta.id})}" class="btn btn-info btn-sm">Ver Detalle</a>
-                            <a th:href="@{/ventas/eliminar/{id}(id=${venta.id})}" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro que desea eliminar esta venta?');">Eliminar</a>
-                        </td>
-                    </tr>
+                    <tbody id="productosSeleccionados">
                     </tbody>
                 </table>
             </div>
-        </div>
+
+            <!-- Resumen de Venta -->
+            <div class="mb-3">
+                <label for="totalVenta" class="form-label">Total de la Venta</label>
+                <input type="text" class="form-control" id="totalVenta" name="totalVenta" readonly>
+            </div>
+            <div class="mb-3">
+                <label for="pagoCliente" class="form-label">Pago del Cliente</label>
+                <input type="number" class="form-control" id="pagoCliente" placeholder="Ingrese el monto pagado">
+            </div>
+            <div class="mb-3">
+                <label for="cambio" class="form-label">Cambio</label>
+                <input type="text" class="form-control" id="cambio" readonly>
+            </div>
+
+            <button type="submit" class="btn btn-custom">Pagar y Guardar Venta</button>
+        </form>
+        <a th:href="@{/}" class="btn btn-custom mt-3">Volver al Inicio</a>
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    // Almacenar productos seleccionados
+    let productosSeleccionados = [];
+
+    document.getElementById("agregarProducto").addEventListener("click", () => {
+        const productoId = document.getElementById("productoId").value;
+
+        if (!productoId) {
+            alert("Debe ingresar un ID de producto válido.");
+            return;
+        }
+
+        // Simular búsqueda de producto (reemplazar con llamada al servidor)
+        fetch(`/productos/buscar/${productoId}`)
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error("Producto no encontrado.");
+                }
+                return response.json();
+            })
+            .then(producto => {
+                // Comprobar si ya está en la lista
+                const existente = productosSeleccionados.find(p => p.id === producto.id);
+                if (existente) {
+                    existente.cantidad++;
+                } else {
+                    productosSeleccionados.push({ ...producto, cantidad: 1 });
+                }
+
+                renderizarTabla();
+            })
+            .catch(error => {
+                console.error(error);
+                alert(error.message);
+            });
+
+        document.getElementById("productoId").value = "";
+    });
+
+    function renderizarTabla() {
+        const tbody = document.getElementById("productosSeleccionados");
+        tbody.innerHTML = "";
+
+        let totalVenta = 0;
+
+        productosSeleccionados.forEach(producto => {
+            const totalProducto = producto.cantidad * producto.precio;
+            totalVenta += totalProducto;
+
+            const row = `
+                <tr>
+                    <td>${producto.id}</td>
+                    <td>${producto.nombre}</td>
+                    <td>
+                        <input type="number" class="form-control cantidad" min="1" value="${producto.cantidad}" data-id="${producto.id}">
+                    </td>
+                    <td>${producto.precio.toFixed(2)}</td>
+                    <td>${totalProducto.toFixed(2)}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" data-id="${producto.id}">Eliminar</button>
+                    </td>
+                </tr>
+            `;
+            tbody.innerHTML += row;
+        });
+
+        document.getElementById("totalVenta").value = totalVenta.toFixed(2);
+
+        // Eventos para cantidad y eliminar
+        tbody.querySelectorAll(".cantidad").forEach(input => {
+            input.addEventListener("input", actualizarCantidad);
+        });
+
+        tbody.querySelectorAll(".btn-danger").forEach(button => {
+            button.addEventListener("click", eliminarProducto);
+        });
+    }
+
+    function actualizarCantidad(event) {
+        const id = parseInt(event.target.dataset.id);
+        const nuevaCantidad = parseInt(event.target.value);
+
+        if (nuevaCantidad <= 0) return;
+
+        const producto = productosSeleccionados.find(p => p.id === id);
+        if (producto) {
+            producto.cantidad = nuevaCantidad;
+            renderizarTabla();
+        }
+    }
+
+    function eliminarProducto(event) {
+        const id = parseInt(event.target.dataset.id);
+        productosSeleccionados = productosSeleccionados.filter(p => p.id !== id);
+        renderizarTabla();
+    }
+
+    document.getElementById("pagoCliente").addEventListener("input", () => {
+        const total = parseFloat(document.getElementById("totalVenta").value) || 0;
+        const pago = parseFloat(document.getElementById("pagoCliente").value) || 0;
+        const cambio = pago - total;
+        document.getElementById("cambio").value = cambio >= 0 ? cambio.toFixed(2) : `Faltan $${Math.abs(cambio).toFixed(2)}`;
+    });
+</script>
 </body>
 </html>
