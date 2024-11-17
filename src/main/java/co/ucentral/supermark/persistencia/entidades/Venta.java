@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -35,6 +36,7 @@ public class Venta {
             joinColumns = @JoinColumn(name = "venta_id"),
             inverseJoinColumns = @JoinColumn(name = "producto_id")
     )
-    private List<Producto> productos;
+
+    private List<Producto> productos = new ArrayList<>();
 
 }

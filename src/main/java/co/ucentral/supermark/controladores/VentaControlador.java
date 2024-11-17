@@ -12,6 +12,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -23,17 +24,17 @@ public class VentaControlador {
     private final ClienteServicio clienteServicio;
     private final ServicioProducto servicioProducto;
 
+
+    @GetMapping
+    public String listarVentas(Model model) {
+        model.addAttribute("ventas", ventaServicio.obtenerTodas());
+        return "ventas";
+    }
     @GetMapping("/nueva")
     public String nuevaVenta(Model model) {
         model.addAttribute("venta", new Venta());
         model.addAttribute("clientes", clienteServicio.obtenerTodos());
         model.addAttribute("productos", ventaServicio.obtenerTodosProductos());
-        return "ventas";
-    }
-
-    @GetMapping
-    public String listarVentas(Model model) {
-        model.addAttribute("ventas", ventaServicio.obtenerTodas());
         return "ventas";
     }
 
@@ -61,12 +62,21 @@ public class VentaControlador {
         model.addAttribute("productos", ventaServicio.obtenerTodosProductos());
         return "ventas";
     }
-    @GetMapping("/ventas/registrar")
-    public String registrarVenta(Model model) {
-        model.addAttribute("venta", new Venta());
-        model.addAttribute("clientes", clienteServicio.listarClientes());
-        model.addAttribute("productos", servicioProducto.listarProductos());
-        return "ventas/registrar";
+    @GetMapping("/ventas")
+    public String mostrarFormularioVenta(Model model) {
+        Venta venta = new Venta();
+
+        // Verificar si la lista de productos es null, y si lo es, inicializarla
+        if (venta.getProductos() == null) {
+            venta.setProductos(new ArrayList<>());
+        }
+
+        // Agregar otros datos necesarios
+        model.addAttribute("venta", venta);
+        model.addAttribute("clientes", clienteServicio.listarClientes());  // Lista de clientes disponibles
+        model.addAttribute("productos", servicioProducto.listarProductos());  // Lista de productos disponibles
+
+        return "ventas";  // Nombre de tu vista HTML
     }
 
 }
