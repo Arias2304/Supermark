@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Cupones de Descuento</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/pagesimple.css}">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    .cupon-card {
+      background-color: #fcede8;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+    .cupon-card h4 {
+      color: #590000;
+    }
+    .btn-primary:hover {
+      background-color: #8c2500;
+    }
+  </style>
+</head>
+<body>
+<div class="container mt-5">
+  <h1 class="text-center">Cupones de Descuento</h1>
+  <div class="row mt-4">
+    <div th:each="cupon : ${cupones}" class="cupon-card">
+      <h4 th:text="'Producto: ' + ${cupon.producto.nombre}"></h4>
+      <p th:text="'Código: ' + ${cupon.producto.codigo}"></p>
+      <p th:text="'Stock actual: ' + ${cupon.producto.cantidad}"></p>
+      <p th:text="'Precio original: $' + ${cupon.producto.precio}"></p>
+      <p th:text="'Descuento aplicado: $' + ${cupon.descuento}"></p>
+      <p th:text="'Precio final: $' + ${cupon.precioFinal}"></p>
+      <p th:text="'Fecha de vencimiento: ' + ${cupon.producto.venc}"></p>
+    </div>
+  </div>
+  <a href="/" class="btn btn-primary mt-3">Volver al inicio</a>
+</div>
+</body>
+</html>

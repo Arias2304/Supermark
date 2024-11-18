@@ -55,7 +55,7 @@ public class VentaServicio {
 
     private Double calcularTotal(List<Producto> productos) {
         return productos.stream()
-                .mapToDouble(producto -> producto.getPrecio().doubleValue())
+                .mapToDouble(Producto::getPrecio)
                 .sum();
     }
 }

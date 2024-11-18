@@ -34,7 +34,7 @@ public class Producto {
     private LocalDate venc;
 
     @Column(name = "prd_precio")
-    private BigDecimal precio;
+    private double precio;
 
     @Column(name = "prd_alerta")
     private boolean alerta;
@@ -43,4 +43,5 @@ public class Producto {
     @JoinColumn(name = "pro_nit", referencedColumnName = "pro_nit")
     private Proveedor proveedor;
 }
+
 
