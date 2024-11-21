@@ -7,7 +7,6 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" type="text/css" th:href="@{/css/pagesimple.css}">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
     <style>
         .btn-custom {
             background-color: #a93100;
@@ -30,10 +29,8 @@
             color: #590000;
             font-family: 'Roboto', sans-serif;
         }
-        .form-inline {
-            display: flex;
-            gap: 10px;
-            align-items: center;
+        .table th, .table td {
+            text-align: center;
         }
     </style>
 </head>
@@ -51,94 +48,171 @@
                         <div class="form-group">
                             <label for="cliente">Cliente</label>
                             <select class="form-control" id="cliente" name="clienteId" required>
-                                <option th:each="clt : ${clientes}" th:value="${clt.ID}" th:text="${clt.nombre}">Seleccione un cliente</option>
+                                <option value="" disabled selected>Seleccione un cliente</option>
+                                <option th:each="clt : ${clientes}" th:value="${clt.ID}" th:text="${clt.nombre}"></option>
                             </select>
                         </div>
                         <!-- Selección de productos -->
                         <div class="form-group mt-3">
                             <label for="producto">Productos</label>
-                            <div class="form-inline">
-                                <select class="form-control" id="producto" name="productoId">
-                                    <option th:each="prd : ${productos}" th:value="${prd.codigo}" th:data-precio="${prd.precio}" th:text="${prd.nombre}">Seleccione un producto</option>
+                            <div class="input-group">
+                                <select class="form-control" id="producto" required>
+                                    <option value="" disabled selected>Seleccione un producto</option>
+                                    <option th:each="prd : ${productos}" th:value="${prd.codigo}" th:data-precio="${prd.precio}" th:text="${prd.nombre}"></option>
                                 </select>
-                                <label for="cantidad"></label><input type="number" class="form-control" id="cantidad" name="cantidad" min="1" placeholder="Cantidad">
-                                <button type="button" class="btn btn-custom" id="agregarProducto">Agregar</button>
+                                <label for="cantidad"></label><input type="number" class="form-control" id="cantidad" min="1" placeholder="Cantidad" required>
+                                <button type="button" class="btn btn-custom" onclick="agregarProducto()">Agregar</button>
                             </div>
                         </div>
-                        <!-- Tabla de productos seleccionados -->
-                        <div class="mt-3">
-                            <h4>Productos Seleccionados</h4>
-                            <table class="table table-striped">
-                                <thead>
-                                <tr>
-                                    <th>Producto</th>
-                                    <th>Cantidad</th>
-                                    <th>Precio Unitario</th>
-                                    <th>Total</th>
-                                    <th>Acción</th>
-                                </tr>
-                                </thead>
-                                <tbody id="productosSeleccionados">
-                                <!-- Productos seleccionados dinámicamente -->
-                                </tbody>
-                            </table>
-                        </div>
-                        <button type="submit" class="btn btn-custom mt-3">Guardar Venta</button>
                     </form>
                 </div>
             </div>
-            <a th:href="@{/}" class="btn btn-custom mt-3">Volver al inicio</a>
+        </div>
+        <!-- Tabla de productos seleccionados -->
+        <div class="col-md-6">
+            <h4>Productos Seleccionados</h4>
+            <table class="table table-striped" id="tablaProductos">
+                <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Total</th>
+                    <th>Acción</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!-- Productos agregados dinámicamente -->
+                </tbody>
+            </table>
+            <div class="mt-3">
+                <h5>Total de la venta: $<span id="totalVenta">0</span></h5>
+                <button id="btnPagar" class="btn btn-success mt-3" onclick="pagar()">Pagar</button>
+                <button id="btnGuardar" class="btn btn-primary mt-3 ml-3" onclick="guardarVenta()">Guardar</button>
+            </div>
         </div>
     </div>
+
+    <!-- Tabla de ventas registradas -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="text-center">Ventas Registradas</h3>
+            <table class="table table-bordered" id="tablaVentas">
+                <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Productos</th>
+                    <th>Total</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <a th:href="@{/}" class="btn btn-custom mt-3">Volver al inicio</a>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<!-- Scripts -->
 <script>
-    $(document).ready(function () {
-        const productosSeleccionados = $('#productosSeleccionados');
+    let totalVenta = 0;
+    let ventas = [];  // Array para almacenar las ventas guardadas
 
-        $('#agregarProducto').click(function () {
-            const producto = $('#producto option:selected');
-            const nombreProducto = producto.text();
-            const codigoProducto = producto.val();
-            const precioProducto = parseFloat(producto.data('precio'));
-            const cantidad = parseInt($('#cantidad').val());
+    function agregarProducto() {
+        const producto = document.getElementById("producto");
+        const cantidad = document.getElementById("cantidad").value;
+        const precio = parseFloat(producto.options[producto.selectedIndex].dataset.precio);
 
-            if (codigoProducto && cantidad > 0) {
-                const total = (precioProducto * cantidad).toFixed(2);
+        if (cantidad > 0 && producto.selectedIndex !== 0) {
+            const total = precio * cantidad;
+            totalVenta += total;
 
-                // Crear una fila en la tabla con el producto seleccionado
-                const fila = `
-                    <tr>
-                        <td>${nombreProducto}</td>
-                        <td>${cantidad}</td>
-                        <td>${precioProducto}</td>
-                        <td>${total}</td>
-                        <td>
-                            <button type="button" class="btn btn-danger btn-sm eliminarProducto">Eliminar</button>
-                        </td>
-                        <input type="hidden" name="productosSeleccionados[${codigoProducto}].codigo" value="${codigoProducto}">
-                        <input type="hidden" name="productosSeleccionados[${codigoProducto}].cantidad" value="${cantidad}">
-                    </tr>
-                `;
+            const fila = `
+                <tr>
+                    <td>${producto.options[producto.selectedIndex].text}</td>
+                    <td>${cantidad}</td>
+                    <td>${precio.toFixed(2)}</td>
+                    <td>${total.toFixed(2)}</td>
+                    <td>
+                        <button class="btn btn-danger btn-sm" onclick="eliminarProducto(this, ${total})">Eliminar</button>
+                    </td>
+                </tr>
+            `;
+            document.querySelector("#tablaProductos tbody").insertAdjacentHTML("beforeend", fila);
+            document.getElementById("totalVenta").textContent = totalVenta.toFixed(2);
+        } else {
+            alert("Seleccione un producto válido y una cantidad mayor a 0.");
+        }
+    }
 
-                productosSeleccionados.append(fila);
+    function eliminarProducto(button, total) {
+        totalVenta -= total;
+        button.closest("tr").remove();
+        document.getElementById("totalVenta").textContent = totalVenta.toFixed(2);
+    }
 
-                // Limpiar los campos de selección y cantidad
-                $('#producto').val('');
-                $('#cantidad').val('');
-            } else {
-                alert('Por favor seleccione un producto y especifique una cantidad válida.');
-            }
+    function pagar() {
+        if (totalVenta > 0) {
+            alert("Venta registrada correctamente con un total de: $" + totalVenta.toFixed(2));
+        } else {
+            alert("Debe agregar productos antes de pagar.");
+        }
+    }
+
+    function guardarVenta() {
+        if (totalVenta > 0) {
+            // Obtener el valor del cliente seleccionado por su nombre
+            const cliente = document.getElementById("cliente").options[document.getElementById("cliente").selectedIndex].text;
+
+
+            const productos = []; // Obtener los productos seleccionados
+            const rows = document.querySelectorAll("#tablaProductos tbody tr");
+            rows.forEach(row => {
+                const producto = row.cells[0].textContent;
+                const cantidad = row.cells[1].textContent;
+                productos.push(`${producto} (x${cantidad})`);
+            });
+
+            // Crear la nueva venta
+            const nuevaVenta = {
+                fecha: new Date().toLocaleString(),
+                cliente: cliente,  // Usamos el nombre del cliente en lugar del ID
+                productos: productos,
+                total: totalVenta.toFixed(2)
+            };
+
+
+            ventas.push(nuevaVenta);
+            document.querySelector("#tablaProductos tbody").innerHTML = "";
+            document.getElementById("totalVenta").textContent = "0";
+            totalVenta = 0;
+
+            actualizarTablaVentas();
+
+            alert("Venta guardada correctamente con un total de: $" + nuevaVenta.total);
+        } else {
+            alert("Debe agregar productos antes de guardar.");
+        }
+    }
+
+    function actualizarTablaVentas() {
+        const tbody = document.querySelector("#tablaVentas tbody");
+        tbody.innerHTML = "";  // Limpiar la tabla antes de agregar las nuevas filas
+
+        ventas.forEach(venta => {
+            const fila = `
+                <tr>
+                    <td>${venta.fecha}</td>
+                    <td>${venta.cliente}</td>
+                    <td><ul>${venta.productos.map(producto => `<li>${producto}</li>`).join('')}</ul></td>
+                    <td>${venta.total}</td>
+                </tr>
+            `;
+            tbody.insertAdjacentHTML("beforeend", fila);
         });
-
-        // Eliminar fila de producto seleccionado
-        productosSeleccionados.on('click', '.eliminarProducto', function () {
-            $(this).closest('tr').remove();
-        });
-    });
+    }
 </script>
 </body>
 </html>
-
-

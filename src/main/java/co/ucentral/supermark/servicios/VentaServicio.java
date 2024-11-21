@@ -1,4 +1,5 @@
 package co.ucentral.supermark.servicios;
+
 import co.ucentral.supermark.persistencia.entidades.Venta;
 import co.ucentral.supermark.persistencia.repositorios.VentaRepositorio;
 
@@ -8,7 +9,6 @@ import org.apache.logging.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -22,28 +22,18 @@ public class VentaServicio {
         return (List<Venta>) ventaRepositorio.findAll();
     }
 
-
     public void guardar(Venta venta) {
-       log.info("Guardando venta por codigo: {}", venta.getId());
-       ventaRepositorio.save(venta);
+        log.info("Guardando venta: {}", venta);
+        ventaRepositorio.save(venta);
     }
-
 
     public Venta buscarPorId(int id) {
         log.info("Buscando venta con ID: {}", id);
-        Optional<Venta> venta = ventaRepositorio.findById(id);
-        return venta.orElse(null);
-    }
-    public void eliminar(int id) {
-        try {
-            log.info("Eliminando venta con ID: {}", id);
-            ventaRepositorio.deleteById(id);
-        } catch (Exception e) {
-            log.error("Error al eliminar la venta con ID {}: {}", id, e.getMessage());
-        }
+        return ventaRepositorio.findById(id).orElse(null);
     }
 
-    public List<Venta> obtenerVentasPorCliente() {
-        return (List<Venta>) ventaRepositorio.findAll();
+    public void eliminar(int id) {
+        log.info("Eliminando venta con ID: {}", id);
+        ventaRepositorio.deleteById(id);
     }
 }
