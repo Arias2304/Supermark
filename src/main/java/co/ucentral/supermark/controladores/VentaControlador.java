@@ -1,5 +1,6 @@
 package co.ucentral.supermark.controladores;
 
+import co.ucentral.supermark.persistencia.entidades.Producto;
 import co.ucentral.supermark.persistencia.entidades.Venta;
 import co.ucentral.supermark.servicios.ClienteServicio;
 import co.ucentral.supermark.servicios.ServicioProducto;
@@ -8,6 +9,7 @@ import co.ucentral.supermark.servicios.VentaServicio;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
@@ -18,30 +20,28 @@ import java.util.List;
 @AllArgsConstructor
 public class VentaControlador {
 
+
     private final VentaServicio ventaServicio;
     private final ClienteServicio clienteServicio;
     private final ServicioProducto servicioProducto;
 
     @GetMapping
     public String listarVentas(Model model) {
-        model.addAttribute("ventas", ventaServicio.obtenerTodas());
+        List<Venta> ventas = ventaServicio.obtenerTodas();
+        model.addAttribute("ventas", ventas);
         model.addAttribute("venta", new Venta());
         model.addAttribute("clientes", clienteServicio.obtenerTodos());
         model.addAttribute("productos", servicioProducto.obtenerTodos());
         return "ventas";
     }
 
-    @GetMapping("/ventas")
-    public String mostrarVentas(Model model) {
-        List<Venta> ventas = ventaServicio.obtenerTodas();
-        model.addAttribute("ventas", ventas);
-        return "ventas";
-    }
-
-
     @PostMapping("/guardar")
-    public String guardarVenta(@ModelAttribute Venta venta) {
+    public String guardarVenta(@ModelAttribute Venta venta, @RequestParam List<String> producto, @RequestParam BigDecimal total, Model model) {
+        venta.setTotal(total);
+        venta.setProducto((Producto) producto);
         ventaServicio.guardar(venta);
+
+        model.addAttribute("mensaje", "Venta registrada exitosamente.");
         return "redirect:/ventas";
     }
 

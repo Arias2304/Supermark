@@ -32,6 +32,18 @@
         .table th, .table td {
             text-align: center;
         }
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f9f9f9;
+        }
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #f1f1f1;
+        }
+        .table th, .table td {
+            padding: 12px 15px;
+        }
+        .table-bordered th, .table-bordered td {
+            border: 1px solid #ddd;
+        }
     </style>
 </head>
 <body>
@@ -43,7 +55,7 @@
             <div class="card mb-4 fondo-venta">
                 <div class="card-header">Registrar Venta</div>
                 <div class="card-body">
-                    <form th:action="@{/ventas/guardar}" th:object="${venta}" method="post">
+                    <form id="ventaForm">
                         <!-- Selección de cliente -->
                         <div class="form-group">
                             <label for="cliente">Cliente</label>
@@ -87,8 +99,7 @@
             </table>
             <div class="mt-3">
                 <h5>Total de la venta: $<span id="totalVenta">0</span></h5>
-                <button id="btnPagar" class="btn btn-success mt-3" onclick="pagar()">Pagar</button>
-                <button id="btnGuardar" class="btn btn-primary mt-3 ml-3" onclick="guardarVenta()">Guardar</button>
+                <button id="btnPagar" class="btn btn-success mt-3" onclick="guardarVenta()">Pagar</button>
             </div>
         </div>
     </div>
@@ -97,9 +108,10 @@
     <div class="row mt-5">
         <div class="col-12">
             <h3 class="text-center">Ventas Registradas</h3>
-            <table class="table table-bordered" id="tablaVentas">
+            <table class="table table-bordered table-striped" id="tablaVentas">
                 <thead>
                 <tr>
+                    <th>ID Venta</th>
                     <th>Fecha</th>
                     <th>Cliente</th>
                     <th>Productos</th>
@@ -118,7 +130,25 @@
 <!-- Scripts -->
 <script>
     let totalVenta = 0;
-    let ventas = [];  // Array para almacenar las ventas guardadas
+    let idVenta = 1;  // Variable para generar un ID único para cada venta
+    const ventas = JSON.parse(localStorage.getItem('ventas')) || [];  // Obtener ventas almacenadas o un array vacío
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // Cargar ventas al cargar la página
+        actualizarTablaVentas();
+
+        // Cargar productos y ventas del localStorage
+        if (localStorage.getItem('productosSeleccionados')) {
+            const productosSeleccionados = JSON.parse(localStorage.getItem('productosSeleccionados'));
+            totalVenta = productosSeleccionados.reduce((acc, prod) => acc + prod.total, 0);
+            document.getElementById("totalVenta").textContent = totalVenta.toFixed(2);
+
+            // Mostrar productos en la tabla
+            productosSeleccionados.forEach(producto => {
+                agregarProductoATabla(producto);
+            });
+        }
+    });
 
     function agregarProducto() {
         const producto = document.getElementById("producto");
@@ -129,43 +159,56 @@
             const total = precio * cantidad;
             totalVenta += total;
 
-            const fila = `
-                <tr>
-                    <td>${producto.options[producto.selectedIndex].text}</td>
-                    <td>${cantidad}</td>
-                    <td>${precio.toFixed(2)}</td>
-                    <td>${total.toFixed(2)}</td>
-                    <td>
-                        <button class="btn btn-danger btn-sm" onclick="eliminarProducto(this, ${total})">Eliminar</button>
-                    </td>
-                </tr>
-            `;
-            document.querySelector("#tablaProductos tbody").insertAdjacentHTML("beforeend", fila);
+            const productoSeleccionado = {
+                nombre: producto.options[producto.selectedIndex].text,
+                cantidad: cantidad,
+                precio: precio,
+                total: total
+            };
+
+            // Guardar productos en el localStorage
+            let productosSeleccionados = JSON.parse(localStorage.getItem('productosSeleccionados')) || [];
+            productosSeleccionados.push(productoSeleccionado);
+            localStorage.setItem('productosSeleccionados', JSON.stringify(productosSeleccionados));
+
             document.getElementById("totalVenta").textContent = totalVenta.toFixed(2);
+
+            agregarProductoATabla(productoSeleccionado);
         } else {
             alert("Seleccione un producto válido y una cantidad mayor a 0.");
         }
+    }
+
+    function agregarProductoATabla(producto) {
+        const fila = `
+            <tr>
+                <td>${producto.nombre}</td>
+                <td>${producto.cantidad}</td>
+                <td>${producto.precio.toFixed(2)}</td>
+                <td>${producto.total.toFixed(2)}</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" onclick="eliminarProducto(this, ${producto.total})">Eliminar</button>
+                </td>
+            </tr>
+        `;
+        document.querySelector("#tablaProductos tbody").insertAdjacentHTML("beforeend", fila);
     }
 
     function eliminarProducto(button, total) {
         totalVenta -= total;
         button.closest("tr").remove();
         document.getElementById("totalVenta").textContent = totalVenta.toFixed(2);
-    }
 
-    function pagar() {
-        if (totalVenta > 0) {
-            alert("Venta registrada correctamente con un total de: $" + totalVenta.toFixed(2));
-        } else {
-            alert("Debe agregar productos antes de pagar.");
-        }
+
+        let productosSeleccionados = JSON.parse(localStorage.getItem('productosSeleccionados'));
+        const index = Array.from(button.closest("tr").parentNode.children).indexOf(button.closest("tr"));
+        productosSeleccionados.splice(index, 1);
+        localStorage.setItem('productosSeleccionados', JSON.stringify(productosSeleccionados));
     }
 
     function guardarVenta() {
         if (totalVenta > 0) {
-            // Obtener el valor del cliente seleccionado por su nombre
             const cliente = document.getElementById("cliente").options[document.getElementById("cliente").selectedIndex].text;
-
 
             const productos = []; // Obtener los productos seleccionados
             const rows = document.querySelectorAll("#tablaProductos tbody tr");
@@ -175,42 +218,40 @@
                 productos.push(`${producto} (x${cantidad})`);
             });
 
-            // Crear la nueva venta
-            const nuevaVenta = {
+            const venta = {
+                id: idVenta++,
                 fecha: new Date().toLocaleString(),
-                cliente: cliente,  // Usamos el nombre del cliente en lugar del ID
-                productos: productos,
+                cliente: cliente,
+                productos: productos.join(", "),
                 total: totalVenta.toFixed(2)
             };
 
+            ventas.push(venta);
+            localStorage.setItem('ventas', JSON.stringify(ventas));
 
-            ventas.push(nuevaVenta);
-            document.querySelector("#tablaProductos tbody").innerHTML = "";
+            localStorage.removeItem('productosSeleccionados');
             document.getElementById("totalVenta").textContent = "0";
-            totalVenta = 0;
-
+            document.querySelector("#tablaProductos tbody").innerHTML = '';
             actualizarTablaVentas();
-
-            alert("Venta guardada correctamente con un total de: $" + nuevaVenta.total);
         } else {
-            alert("Debe agregar productos antes de guardar.");
+            alert("Debe agregar productos antes de realizar la venta.");
         }
     }
 
     function actualizarTablaVentas() {
-        const tbody = document.querySelector("#tablaVentas tbody");
-        tbody.innerHTML = "";  // Limpiar la tabla antes de agregar las nuevas filas
-
+        const tablaVentas = document.querySelector("#tablaVentas tbody");
+        tablaVentas.innerHTML = '';
         ventas.forEach(venta => {
-            const fila = `
+            const row = `
                 <tr>
+                    <td>${venta.id}</td>
                     <td>${venta.fecha}</td>
                     <td>${venta.cliente}</td>
-                    <td><ul>${venta.productos.map(producto => `<li>${producto}</li>`).join('')}</ul></td>
+                    <td>${venta.productos}</td>
                     <td>${venta.total}</td>
                 </tr>
             `;
-            tbody.insertAdjacentHTML("beforeend", fila);
+            tablaVentas.insertAdjacentHTML("beforeend", row);
         });
     }
 </script>
