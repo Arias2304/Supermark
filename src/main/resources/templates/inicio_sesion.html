@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Inicio de Sesión</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/pagesimple.css}">
+  <style>
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background-color: #f8f9fa;
+    }
+    .login-container {
+      background-color: #ffffff;
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 400px;
+    }
+    .login-container h1 {
+      font-size: 24px;
+      margin-bottom: 1.5rem;
+      text-align: center;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+<div class="login-container">
+  <h1>Inicio de Sesión</h1>
+  <form id="loginForm">
+    <div class="mb-3">
+      <label for="username" class="form-label">Usuario</label>
+      <input type="text" id="username" class="form-control" placeholder="Ingrese su usuario" required>
+    </div>
+    <div class="mb-3">
+      <label for="password" class="form-label">Contraseña</label>
+      <input type="password" id="password" class="form-control" placeholder="Ingrese su contraseña" required>
+    </div>
+    <button type="button" class="btn btn-primary w-100" onclick="validateLogin()">Iniciar Sesión</button>
+  </form>
+  <div id="error" class="mt-3 text-danger" style="display: none;">Credenciales incorrectas. Intente de nuevo.</div>
+</div>
+
+<script>
+  // Credenciales fijas
+  const VALID_USER = "admin";
+  const VALID_PASS = "12345";
+
+  function validateLogin() {
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    if (username === VALID_USER && password === VALID_PASS) {
+      // Redirigir a index si las credenciales son correctas
+      window.location.href = "/index";
+    } else {
+      // Mostrar error si las credenciales no son válidas
+      const errorDiv = document.getElementById("error");
+      errorDiv.style.display = "block";
+    }
+  }
+</script>
+</body>
+</html>
