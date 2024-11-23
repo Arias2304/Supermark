@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" type="text/css" th:href="@{/css/pagesimple.css}">
+  <link rel="stylesheet" type="text/css" th:href="@{/css/inicio.css}">
   <style>
     body {
       display: flex;
@@ -16,7 +16,7 @@
       background-color: #f8f9fa;
     }
     .login-container {
-      background-color: #ffffff;
+      background-color: #fcede8;
       padding: 2rem;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
@@ -24,16 +24,28 @@
       max-width: 400px;
     }
     .login-container h1 {
-      font-size: 24px;
+      font-size: 32px;
+      font-weight: bold;
       margin-bottom: 1.5rem;
       text-align: center;
-      color: #333;
+      font-family: 'Roboto', sans-serif;
+      color: #402f21;
+    }
+    /* Estilo para el botón */
+    .btn-primary {
+      background-color: #a93100;
+      border-color: #a93100;
+      color: white;
+    }
+    .btn-primary:hover {
+      background-color: #922900;
+      border-color: #922900;
     }
   </style>
 </head>
 <body>
 <div class="login-container">
-  <h1>Inicio de Sesión</h1>
+  <h1>SUPERMARK</h1>
   <form id="loginForm">
     <div class="mb-3">
       <label for="username" class="form-label">Usuario</label>
