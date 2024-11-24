@@ -111,18 +111,11 @@
             <table class="table table-bordered table-striped" id="tablaVentas">
                 <thead>
                 <tr>
-<<<<<<< HEAD
-                    <th>ID Venta</th>
-=======
->>>>>>> vnt
                     <th>Fecha</th>
                     <th>Cliente</th>
                     <th>Productos</th>
                     <th>Total</th>
-<<<<<<< HEAD
-=======
                     <th>Acción</th>
->>>>>>> vnt
                 </tr>
                 </thead>
                 <tbody>
@@ -131,42 +124,24 @@
         </div>
     </div>
 
-<<<<<<< HEAD
-=======
 
->>>>>>> vnt
     <a th:href="@{/}" class="btn btn-custom mt-3">Volver al inicio</a>
 </div>
 
 <!-- Scripts -->
 <script>
     let totalVenta = 0;
-<<<<<<< HEAD
-    let idVenta = 1;  // Variable para generar un ID único para cada venta
-    const ventas = JSON.parse(localStorage.getItem('ventas')) || [];  // Obtener ventas almacenadas o un array vacío
-
-    document.addEventListener('DOMContentLoaded', function () {
-        // Cargar ventas al cargar la página
-        actualizarTablaVentas();
-
-        // Cargar productos y ventas del localStorage
-=======
     let idVenta = 1;
     const ventas = JSON.parse(localStorage.getItem('ventas')) || [];  // Obtener ventas almacenadas o un array vacío
 
     document.addEventListener('DOMContentLoaded', function () {
         actualizarTablaVentas();
 
->>>>>>> vnt
         if (localStorage.getItem('productosSeleccionados')) {
             const productosSeleccionados = JSON.parse(localStorage.getItem('productosSeleccionados'));
             totalVenta = productosSeleccionados.reduce((acc, prod) => acc + prod.total, 0);
             document.getElementById("totalVenta").textContent = totalVenta.toFixed(2);
 
-<<<<<<< HEAD
-            // Mostrar productos en la tabla
-=======
->>>>>>> vnt
             productosSeleccionados.forEach(producto => {
                 agregarProductoATabla(producto);
             });
@@ -233,11 +208,7 @@
         if (totalVenta > 0) {
             const cliente = document.getElementById("cliente").options[document.getElementById("cliente").selectedIndex].text;
 
-<<<<<<< HEAD
-            const productos = []; // Obtener los productos seleccionados
-=======
             const productos = [];
->>>>>>> vnt
             const rows = document.querySelectorAll("#tablaProductos tbody tr");
             rows.forEach(row => {
                 const producto = row.cells[0].textContent;
@@ -266,26 +237,6 @@
     }
 
     function actualizarTablaVentas() {
-<<<<<<< HEAD
-        const tablaVentas = document.querySelector("#tablaVentas tbody");
-        tablaVentas.innerHTML = '';
-        ventas.forEach(venta => {
-            const row = `
-                <tr>
-                    <td>${venta.id}</td>
-                    <td>${venta.fecha}</td>
-                    <td>${venta.cliente}</td>
-                    <td>${venta.productos}</td>
-                    <td>${venta.total}</td>
-                </tr>
-            `;
-            tablaVentas.insertAdjacentHTML("beforeend", row);
-        });
-    }
-</script>
-</body>
-</html>
-=======
     const tablaVentas = document.querySelector("#tablaVentas tbody");
     tablaVentas.innerHTML = '';
     ventas.forEach((venta, index) => {
@@ -412,4 +363,3 @@ function imprimirFactura(index) {
 </script>
 </body>
 </html>
->>>>>>> vnt
