@@ -111,11 +111,18 @@
             <table class="table table-bordered table-striped" id="tablaVentas">
                 <thead>
                 <tr>
+<<<<<<< HEAD
                     <th>ID Venta</th>
+=======
+>>>>>>> vnt
                     <th>Fecha</th>
                     <th>Cliente</th>
                     <th>Productos</th>
                     <th>Total</th>
+<<<<<<< HEAD
+=======
+                    <th>Acción</th>
+>>>>>>> vnt
                 </tr>
                 </thead>
                 <tbody>
@@ -124,12 +131,17 @@
         </div>
     </div>
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> vnt
     <a th:href="@{/}" class="btn btn-custom mt-3">Volver al inicio</a>
 </div>
 
 <!-- Scripts -->
 <script>
     let totalVenta = 0;
+<<<<<<< HEAD
     let idVenta = 1;  // Variable para generar un ID único para cada venta
     const ventas = JSON.parse(localStorage.getItem('ventas')) || [];  // Obtener ventas almacenadas o un array vacío
 
@@ -138,12 +150,23 @@
         actualizarTablaVentas();
 
         // Cargar productos y ventas del localStorage
+=======
+    let idVenta = 1;
+    const ventas = JSON.parse(localStorage.getItem('ventas')) || [];  // Obtener ventas almacenadas o un array vacío
+
+    document.addEventListener('DOMContentLoaded', function () {
+        actualizarTablaVentas();
+
+>>>>>>> vnt
         if (localStorage.getItem('productosSeleccionados')) {
             const productosSeleccionados = JSON.parse(localStorage.getItem('productosSeleccionados'));
             totalVenta = productosSeleccionados.reduce((acc, prod) => acc + prod.total, 0);
             document.getElementById("totalVenta").textContent = totalVenta.toFixed(2);
 
+<<<<<<< HEAD
             // Mostrar productos en la tabla
+=======
+>>>>>>> vnt
             productosSeleccionados.forEach(producto => {
                 agregarProductoATabla(producto);
             });
@@ -210,7 +233,11 @@
         if (totalVenta > 0) {
             const cliente = document.getElementById("cliente").options[document.getElementById("cliente").selectedIndex].text;
 
+<<<<<<< HEAD
             const productos = []; // Obtener los productos seleccionados
+=======
+            const productos = [];
+>>>>>>> vnt
             const rows = document.querySelectorAll("#tablaProductos tbody tr");
             rows.forEach(row => {
                 const producto = row.cells[0].textContent;
@@ -239,6 +266,7 @@
     }
 
     function actualizarTablaVentas() {
+<<<<<<< HEAD
         const tablaVentas = document.querySelector("#tablaVentas tbody");
         tablaVentas.innerHTML = '';
         ventas.forEach(venta => {
@@ -257,3 +285,131 @@
 </script>
 </body>
 </html>
+=======
+    const tablaVentas = document.querySelector("#tablaVentas tbody");
+    tablaVentas.innerHTML = '';
+    ventas.forEach((venta, index) => {
+        const row = `
+            <tr>
+                <td>${venta.fecha}</td>
+                <td>${venta.cliente}</td>
+                <td>${venta.productos}</td>
+                <td>${venta.total}</td>
+                <td>
+                    <button class="btn btn-custom mt-3" onclick="imprimirFactura(${index})">Imprimir</button>
+                </td>
+            </tr>
+        `;
+        tablaVentas.insertAdjacentHTML("beforeend", row);
+    });
+}
+
+function imprimirFactura(index) {
+    const venta = ventas[index];
+    const factura = `
+        <html>
+        <head>
+            <style>
+                body {
+                    font-family: Arial, sans-serif;
+                    margin: 20px;
+                    padding: 0;
+                    color: #333;
+                    background-color: #f9f9f9;
+                }
+                .factura-container {
+                    width: 100%;
+                    max-width: 600px;
+                    margin: 0 auto;
+                    border: 1px solid #ccc;
+                    border-radius: 10px;
+                    padding: 20px;
+                    background-color: white;
+                    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+                }
+                .encabezado {
+                    text-align: center;
+                    border-bottom: 2px solid #e74c3c;
+                    padding-bottom: 10px;
+                    margin-bottom: 20px;
+                }
+                .encabezado h1 {
+                    margin: 0;
+                    font-size: 24px;
+                    color: #e74c3c;
+                }
+                .encabezado p {
+                    margin: 5px 0;
+                    font-size: 14px;
+                }
+                .detalle {
+                    margin: 15px 0;
+                }
+                .detalle strong {
+                    display: block;
+                    margin: 5px 0;
+                }
+                .productos {
+                    margin: 20px 0;
+                }
+                .productos ul {
+                    padding-left: 20px;
+                }
+                .productos li {
+                    margin-bottom: 5px;
+                }
+                .total {
+                    text-align: right;
+                    font-size: 18px;
+                    color: #27ae60;
+                    margin-top: 20px;
+                }
+                .pie {
+                    text-align: center;
+                    margin-top: 20px;
+                    padding-top: 10px;
+                    border-top: 1px solid #ccc;
+                    font-size: 14px;
+                    color: #777;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="factura-container">
+                <div class="encabezado">
+                    <h1>Supermark Don Juan</h1>
+                    <p><strong>NIT:</strong> 900264187</p>
+                    <p><strong>Dirección:</strong> Cll 20 # 4 - 55</p>
+                    <p><strong>Teléfono:</strong> +57 300 123 4567</p>
+                </div>
+                <div class="detalle">
+                    <strong>Fecha:</strong> ${venta.fecha}
+                    <strong>Cliente:</strong> ${venta.cliente}
+                </div>
+                <div class="productos">
+                    <strong>Productos:</strong>
+                    <ul>
+                        ${venta.productos.split(", ").map(producto => `<li>${producto}</li>`).join("")}
+                    </ul>
+                </div>
+                <div class="total">
+                    <strong>Total a pagar:</strong> $${venta.total}
+                </div>
+                <div class="pie">
+                    <p>Gracias por su compra en <strong>Supermark Don Juan</strong>.</p>
+                </div>
+            </div>
+        </body>
+        </html>
+    `;
+    const ventana = window.open("", "Factura", "width=600,height=800");
+    ventana.document.write(factura);
+    ventana.document.close();
+    ventana.print();
+}
+
+
+</script>
+</body>
+</html>
+>>>>>>> vnt

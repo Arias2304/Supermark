@@ -34,6 +34,10 @@ public class VentaServicio {
 
     public void eliminar(int id) {
         log.info("Eliminando venta con ID: {}", id);
+<<<<<<< HEAD
         ventaRepositorio.deleteById((long) id);
+=======
+        ventaRepositorio.deleteById(id);
+>>>>>>> vnt
     }
 }
