@@ -5,9 +5,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.math.BigDecimal;
+import java.time.LocalDate;
+
 
 @Entity
 @Table(name = "ventas")
@@ -15,28 +15,28 @@ import java.util.List;
 @Setter
 @NoArgsConstructor
 public class Venta {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    @Column(name = "vent_id")
+    private int id;
 
     @ManyToOne
-    @JoinColumn(name = "clt_id")
+    @JoinColumn(name = "clt_Id", referencedColumnName ="clt_Id")
     private Cliente cliente;
 
-    @Column(name = "fecha_venta")
-    private LocalDateTime fechaVenta;
+    @ManyToOne
+    @JoinColumn(name = "prd_producto", referencedColumnName = "prd_producto")
+    private Producto producto;
 
-    @Column(name = "total")
-    private Double total;
+    @Column(name = "vent_cantidad")
+    private int cantidad;
 
-    @ManyToMany
-    @JoinTable(
-            name = "venta_producto",
-            joinColumns = @JoinColumn(name = "venta_id"),
-            inverseJoinColumns = @JoinColumn(name = "producto_id")
-    )
+    @Column(name = "vent_precio")
+    private BigDecimal precio;
 
-    private List<Producto> productos = new ArrayList<>();
+    @Column(name = "vent_total")
+    private BigDecimal total;
 
+    @Column(name = "vent_fecha")
+    private LocalDate fecha;
 }

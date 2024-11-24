@@ -8,11 +8,13 @@ public class NavegacionControlador {
 
     @GetMapping("/")
     public String inicio() {
-        return "index";
+        return "inicio_sesion";
     }
 
-
-
+    @GetMapping("/index")
+    public String index() {
+        return "index"; // Redirige correctamente a la vista index.html
+    }
 
 }
 
