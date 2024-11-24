@@ -49,6 +49,10 @@
 <body>
 <div class="container texto-venta mt-5">
     <h1 class="text-center">GESTIÓN DE VENTAS</h1>
+    <a th:href="@{/}" class="btn btn-custom mt-3">Volver al inicio</a>
+    <div class="row mt-4">
+
+    </div>
     <div class="row">
         <!-- Formulario para registrar la venta -->
         <div class="col-md-6">
@@ -119,12 +123,7 @@
             </table>
         </div>
     </div>
-<<<<<<< HEAD
 
-    <a th:href="@{/index}" class="btn btn-custom mt-3">Volver al inicio</a>
-=======
-    <a th:href="@{/}" class="btn btn-custom mt-3">Volver al inicio</a>
->>>>>>> Cupones
 </div>
 <script>
     let totalVenta = 0;
@@ -259,7 +258,7 @@
                     <td>${venta.productos}</td>
                     <td>${venta.total}</td>
                     <td>
-                        <button class="btn btn-custom mt-3" onclick="imprimirFactura(${index})">Imprimir</button>
+                        <button class="btn btn-custom mt-3" onclick="imprimirFactura(${index})">Factura</button>
                     </td>
                 </tr>
             `;
@@ -314,3 +313,4 @@
 
 </body>
 </html>
+
