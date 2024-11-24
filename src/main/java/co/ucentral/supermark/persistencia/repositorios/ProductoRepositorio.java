@@ -4,7 +4,7 @@ import org.springframework.data.repository.CrudRepository;
 
 
 
-public interface ProductoRepositorio extends CrudRepository<Producto, String> {
+public interface ProductoRepositorio extends CrudRepository<Producto, Integer> {
 
 
 

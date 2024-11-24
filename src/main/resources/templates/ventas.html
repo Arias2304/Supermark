@@ -56,7 +56,6 @@
                 <div class="card-header">Registrar Venta</div>
                 <div class="card-body">
                     <form id="ventaForm">
-                        <!-- Selección de cliente -->
                         <div class="form-group">
                             <label for="cliente">Cliente</label>
                             <select class="form-control" id="cliente" name="clienteId" required>
@@ -64,7 +63,6 @@
                                 <option th:each="clt : ${clientes}" th:value="${clt.ID}" th:text="${clt.nombre}"></option>
                             </select>
                         </div>
-                        <!-- Selección de productos -->
                         <div class="form-group mt-3">
                             <label for="producto">Productos</label>
                             <div class="input-group">
@@ -94,7 +92,6 @@
                 </tr>
                 </thead>
                 <tbody>
-                <!-- Productos agregados dinámicamente -->
                 </tbody>
             </table>
             <div class="mt-3">
@@ -103,7 +100,6 @@
             </div>
         </div>
     </div>
-
     <!-- Tabla de ventas registradas -->
     <div class="row mt-5">
         <div class="col-12">
@@ -111,11 +107,11 @@
             <table class="table table-bordered table-striped" id="tablaVentas">
                 <thead>
                 <tr>
-                    <th>ID Venta</th>
                     <th>Fecha</th>
                     <th>Cliente</th>
                     <th>Productos</th>
                     <th>Total</th>
+                    <th>Acción</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -123,27 +119,30 @@
             </table>
         </div>
     </div>
+<<<<<<< HEAD
 
     <a th:href="@{/index}" class="btn btn-custom mt-3">Volver al inicio</a>
+=======
+    <a th:href="@{/}" class="btn btn-custom mt-3">Volver al inicio</a>
+>>>>>>> Cupones
 </div>
-
-<!-- Scripts -->
 <script>
     let totalVenta = 0;
-    let idVenta = 1;  // Variable para generar un ID único para cada venta
-    const ventas = JSON.parse(localStorage.getItem('ventas')) || [];  // Obtener ventas almacenadas o un array vacío
+    let idVenta = 1;
+    const ventas = JSON.parse(localStorage.getItem('ventas')) || [];
+    const cuponesDisponibles = [
+        { id: 1, codigo: "DESCUENTO10", descuento: 0.1 },
+        { id: 2, codigo: "OFERTA20", descuento: 0.2 }
+    ];
 
     document.addEventListener('DOMContentLoaded', function () {
-        // Cargar ventas al cargar la página
         actualizarTablaVentas();
 
-        // Cargar productos y ventas del localStorage
         if (localStorage.getItem('productosSeleccionados')) {
             const productosSeleccionados = JSON.parse(localStorage.getItem('productosSeleccionados'));
             totalVenta = productosSeleccionados.reduce((acc, prod) => acc + prod.total, 0);
             document.getElementById("totalVenta").textContent = totalVenta.toFixed(2);
 
-            // Mostrar productos en la tabla
             productosSeleccionados.forEach(producto => {
                 agregarProductoATabla(producto);
             });
@@ -166,7 +165,6 @@
                 total: total
             };
 
-            // Guardar productos en el localStorage
             let productosSeleccionados = JSON.parse(localStorage.getItem('productosSeleccionados')) || [];
             productosSeleccionados.push(productoSeleccionado);
             localStorage.setItem('productosSeleccionados', JSON.stringify(productosSeleccionados));
@@ -199,18 +197,30 @@
         button.closest("tr").remove();
         document.getElementById("totalVenta").textContent = totalVenta.toFixed(2);
 
-
         let productosSeleccionados = JSON.parse(localStorage.getItem('productosSeleccionados'));
         const index = Array.from(button.closest("tr").parentNode.children).indexOf(button.closest("tr"));
         productosSeleccionados.splice(index, 1);
         localStorage.setItem('productosSeleccionados', JSON.stringify(productosSeleccionados));
     }
 
+    function aplicarCupon() {
+        if (totalVenta > 0) {
+            const cupon = cuponesDisponibles[0];
+            if (cupon) {
+                const descuento = totalVenta * cupon.descuento;
+                totalVenta -= descuento;
+                document.getElementById("totalVenta").textContent = totalVenta.toFixed(2);
+                alert(`Se aplicó un descuento de ${cupon.descuento * 100}% (${cupon.codigo}).`);
+            }
+        }
+    }
+
     function guardarVenta() {
         if (totalVenta > 0) {
+            aplicarCupon();
             const cliente = document.getElementById("cliente").options[document.getElementById("cliente").selectedIndex].text;
 
-            const productos = []; // Obtener los productos seleccionados
+            const productos = [];
             const rows = document.querySelectorAll("#tablaProductos tbody tr");
             rows.forEach(row => {
                 const producto = row.cells[0].textContent;
@@ -241,19 +251,66 @@
     function actualizarTablaVentas() {
         const tablaVentas = document.querySelector("#tablaVentas tbody");
         tablaVentas.innerHTML = '';
-        ventas.forEach(venta => {
+        ventas.forEach((venta, index) => {
             const row = `
                 <tr>
-                    <td>${venta.id}</td>
                     <td>${venta.fecha}</td>
                     <td>${venta.cliente}</td>
                     <td>${venta.productos}</td>
                     <td>${venta.total}</td>
+                    <td>
+                        <button class="btn btn-custom mt-3" onclick="imprimirFactura(${index})">Imprimir</button>
+                    </td>
                 </tr>
             `;
             tablaVentas.insertAdjacentHTML("beforeend", row);
         });
     }
+
+    function imprimirFactura(index) {
+        const venta = ventas[index];
+        const factura = `
+            <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 20px; padding: 0; color: #333; background-color: #f9f9f9; }
+                    .factura-container { width: 100%; max-width: 600px; margin: 0 auto; padding: 20px; background-color: white; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+                    .encabezado { text-align: center; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; margin-bottom: 20px; }
+                    .encabezado h1 { margin: 0; font-size: 24px; color: #e74c3c; }
+                    .detalle { margin: 15px 0; }
+                    .productos { margin: 20px 0; }
+                    .productos ul { padding-left: 20px; }
+                    .total { text-align: right; font-size: 18px; color: #27ae60; margin-top: 20px; }
+                </style>
+            </head>
+            <body>
+                <div class="factura-container">
+                    <div class="encabezado">
+                        <h1>Supermark Don Juan</h1>
+                        <p><strong>NIT:</strong> 900264187</p>
+                        <p><strong>Dirección:</strong> Cll 20 # 4 - 55</p>
+                    </div>
+                    <div class="detalle">
+                        <strong>Fecha:</strong> ${venta.fecha}<br>
+                        <strong>Cliente:</strong> ${venta.cliente}
+                    </div>
+                    <div class="productos">
+                        <strong>Productos:</strong>
+                        <ul>${venta.productos.split(", ").map(producto => `<li>${producto}</li>`).join("")}</ul>
+                    </div>
+                    <div class="total">
+                        <strong>Total a pagar:</strong> $${venta.total}
+                    </div>
+                </div>
+            </body>
+            </html>
+        `;
+        const ventana = window.open("", "Factura", "width=600,height=800");
+        ventana.document.write(factura);
+        ventana.document.close();
+        ventana.print();
+    }
 </script>
+
 </body>
 </html>

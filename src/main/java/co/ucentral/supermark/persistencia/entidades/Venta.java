@@ -39,4 +39,8 @@ public class Venta {
 
     @Column(name = "vent_fecha")
     private LocalDate fecha;
+
 }
+
+
+

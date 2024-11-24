@@ -1,6 +1,5 @@
 package co.ucentral.supermark.persistencia.entidades;
 
-import co.ucentral.supermark.persistencia.entidades.Producto;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -13,10 +12,10 @@ import lombok.Setter;
 @Getter
 @Table(name = "cupon")
 @Entity
-
 public class Cupon {
+
     @ManyToOne
-    @JoinColumn(name = "prd_id")
+    @JoinColumn(name = "prd_producto")
     private Producto producto;
 
     private double descuento;
@@ -24,7 +23,9 @@ public class Cupon {
     private double precioFinal;
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-}
+    private String codigo;
 
+}

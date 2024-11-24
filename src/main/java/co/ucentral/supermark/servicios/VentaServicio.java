@@ -29,11 +29,13 @@ public class VentaServicio {
 
     public Venta buscarPorId(int id) {
         log.info("Buscando venta con ID: {}", id);
-        return ventaRepositorio.findById((long) id).orElse(null);
+        return ventaRepositorio.findById((int) id).orElse(null);
     }
 
     public void eliminar(int id) {
         log.info("Eliminando venta con ID: {}", id);
-        ventaRepositorio.deleteById((long) id);
+        ventaRepositorio.deleteById((int) id);
+        ventaRepositorio.deleteById(id);
+
     }
 }

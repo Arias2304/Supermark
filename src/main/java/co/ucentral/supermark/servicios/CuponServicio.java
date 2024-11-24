@@ -2,6 +2,7 @@ package co.ucentral.supermark.servicios;
 
 import co.ucentral.supermark.persistencia.entidades.Cupon;
 import co.ucentral.supermark.persistencia.entidades.Producto;
+import co.ucentral.supermark.persistencia.repositorios.CuponRepositorio;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -9,11 +10,18 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 public class CuponServicio {
+
     @Autowired
     private ServicioProducto servicioProducto;
+
+    @Autowired
+    private CuponRepositorio cuponRepositorio;
+
 
     public List<Producto> obtenerProductosConDescuento(int limiteStock, int diasVencimiento) {
         List<Producto> productos = servicioProducto.listarProductos();
@@ -34,11 +42,12 @@ public class CuponServicio {
     public double calcularDescuento(Producto producto, double porcentajeDescuento) {
         return producto.getPrecio() * (porcentajeDescuento / 100);
     }
+
     public List<Cupon> obtenerCupones() {
         List<Producto> productos = servicioProducto.listarProductos();
         List<Cupon> cupones = new ArrayList<>();
         LocalDate hoy = LocalDate.now();
-        LocalDate fechaLimite = hoy.plusDays(7); // Ejemplo: productos que vencen en los próximos 7 días.
+        LocalDate fechaLimite = hoy.plusDays(7);
 
         for (Producto producto : productos) {
             if (producto.getCantidad() < 10 ||
@@ -53,4 +62,7 @@ public class CuponServicio {
         return cupones;
     }
 
+    public Optional<Cupon> obtenerCuponPorCodigo(String codigo) {
+        return cuponRepositorio.findByCodigo(codigo);
+    }
 }
