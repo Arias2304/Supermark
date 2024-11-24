@@ -3,6 +3,7 @@ package co.ucentral.supermark.controladores;
 import co.ucentral.supermark.persistencia.entidades.Producto;
 import co.ucentral.supermark.persistencia.entidades.Venta;
 import co.ucentral.supermark.servicios.ClienteServicio;
+import co.ucentral.supermark.servicios.CuponServicio;
 import co.ucentral.supermark.servicios.ServicioProducto;
 import co.ucentral.supermark.servicios.VentaServicio;
 
@@ -24,6 +25,7 @@ public class VentaControlador {
     private final VentaServicio ventaServicio;
     private final ClienteServicio clienteServicio;
     private final ServicioProducto servicioProducto;
+    private final CuponServicio cuponServicio;
 
     @GetMapping
     public String listarVentas(Model model) {
@@ -32,6 +34,7 @@ public class VentaControlador {
         model.addAttribute("venta", new Venta());
         model.addAttribute("clientes", clienteServicio.obtenerTodos());
         model.addAttribute("productos", servicioProducto.obtenerTodos());
+        model.addAttribute("cupones", cuponServicio.obtenerCupones());
         return "ventas";
     }
 
@@ -44,6 +47,7 @@ public class VentaControlador {
         model.addAttribute("mensaje", "Venta registrada exitosamente.");
         return "redirect:/ventas";
     }
+
 
     @PostMapping("/pagar")
     public String pagarVenta(@RequestParam("total") BigDecimal total, Model model) {
