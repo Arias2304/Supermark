@@ -31,7 +31,7 @@ public class ServicioProducto {
 
     public Producto buscarPorCodigo(String codigo) {
         log.info("Buscando producto con código: {}", codigo);
-        Optional<Producto> producto = productoRepositorio.findById(codigo);
+        Optional<Producto> producto = productoRepositorio.findById(Integer.valueOf(codigo));
         return producto.orElse(null);
     }
 
@@ -39,7 +39,7 @@ public class ServicioProducto {
     public void borrarPorCodigo(int codigo) {
         try {
             log.info("Eliminando producto con código: {}", codigo);
-            productoRepositorio.deleteById(String.valueOf(codigo));
+            productoRepositorio.deleteById(Integer.valueOf(String.valueOf(codigo)));
         } catch (Exception e) {
             log.error("Error al eliminar el producto con código {}: {}", codigo, e.getMessage());
         }
@@ -59,6 +59,8 @@ public class ServicioProducto {
     }
     @Autowired
     private ProductoRepositorio productoRepository;
+
+
 
     public List<Producto> listarProductos() {
         return (List<Producto>) productoRepository.findAll();
