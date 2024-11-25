@@ -27,6 +27,9 @@
 <body>
 <div class="container mt-5">
   <h1 class="text-center">Cupones de Descuento</h1>
+  <a th:href="@{/index}" class="btn btn-primary mt-3">Volver al inicio</a>
+  <div class="row mt-4">
+
   <div class="row mt-4">
     <div th:each="cupon : ${cupones}" class="cupon-card">
       <h4 th:text="'Producto: ' + ${cupon.producto.nombre}"></h4>
@@ -38,7 +41,7 @@
       <p th:text="'Fecha de vencimiento: ' + ${cupon.producto.venc}"></p>
     </div>
   </div>
-  <a th:href="@{/index}" class="btn btn-primary mt-3">Volver al inicio</a>
+  </div>
 </div>
 </body>
 </html>
