@@ -34,7 +34,7 @@ public class ClienteServicio {
         try {
             clienteRepositorio.delete(cliente);
         } catch (Exception e) {
-            log.error("Error al borrar el cliente: " + e.getMessage());
+            log.error("Error al borrar el cliente: {}", e.getMessage());
             return false;
         }
         return true;
