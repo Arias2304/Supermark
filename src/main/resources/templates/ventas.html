@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Supermark - Ventas</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/pagesimple.css}">
+    <style>
+        .btn-custom {
+            background-color: #a93100;
+            color: white;
+            font-family: 'Roboto', sans-serif;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .btn-custom:hover {
+            background-color: #8c2500;
+        }
+        .fondo-venta {
+            background-color: #fcede8;
+            padding: 20px;
+            border-radius: 5px;
+        }
+        .texto-venta {
+            color: #590000;
+            font-family: 'Roboto', sans-serif;
+        }
+        .table th, .table td {
+            text-align: center;
+        }
+        .table-striped tbody tr:nth-of-type(odd) {
+            background-color: #f9f9f9;
+        }
+        .table-striped tbody tr:nth-of-type(even) {
+            background-color: #f1f1f1;
+        }
+        .table th, .table td {
+            padding: 12px 15px;
+        }
+        .table-bordered th, .table-bordered td {
+            border: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+<div class="container texto-venta mt-5">
+    <h1 class="text-center">GESTIÓN DE VENTAS</h1>
+    <a th:href="@{/index}" class="btn btn-custom mt-3">Volver al inicio</a>
+    <div class="row mt-4">
+
+    </div>
+    <div class="row">
+        <!-- Formulario para registrar la venta -->
+        <div class="col-md-6">
+            <div class="card mb-4 fondo-venta">
+                <div class="card-header">Registrar Venta</div>
+                <div class="card-body">
+                    <form id="ventaForm">
+                        <div class="form-group">
+                            <label for="cliente">Cliente</label>
+                            <select class="form-control" id="cliente" name="clienteId" required>
+                                <option value="" disabled selected>Seleccione un cliente</option>
+                                <option th:each="clt : ${clientes}" th:value="${clt.ID}" th:text="${clt.nombre}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group mt-3">
+                            <label for="producto">Productos</label>
+                            <div class="input-group">
+                                <select class="form-control" id="producto" required>
+                                    <option value="" disabled selected>Seleccione un producto</option>
+                                    <option th:each="prd : ${productos}" th:value="${prd.codigo}" th:data-precio="${prd.precio}" th:text="${prd.nombre}"></option>
+                                </select>
+                                <label for="cantidad"></label><input type="number" class="form-control" id="cantidad" min="1" placeholder="Cantidad" required>
+                                <button type="button" class="btn btn-custom" onclick="agregarProducto()">Agregar</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Tabla de productos seleccionados -->
+        <div class="col-md-6">
+            <h4>Productos Seleccionados</h4>
+            <table class="table table-striped" id="tablaProductos">
+                <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Cantidad</th>
+                    <th>Precio Unitario</th>
+                    <th>Total</th>
+                    <th>Acción</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+            <div class="mt-3">
+                <h5>Total de la venta: $<span id="totalVenta">0</span></h5>
+                <button id="btnPagar" class="btn btn-success mt-3" onclick="guardarVenta()">Pagar</button>
+            </div>
+        </div>
+    </div>
+    <!-- Tabla de ventas registradas -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <h3 class="text-center">Ventas Registradas</h3>
+            <table class="table table-bordered table-striped" id="tablaVentas">
+                <thead>
+                <tr>
+                    <th>Fecha</th>
+                    <th>Cliente</th>
+                    <th>Productos</th>
+                    <th>Total</th>
+                    <th>Acción</th>
+                </tr>
+                </thead>
+                <tbody>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+<script>
+    let totalVenta = 0;
+    let idVenta = 1;
+    const ventas = JSON.parse(localStorage.getItem('ventas')) || [];
+    const cuponesDisponibles = [
+        { id: 1, codigo: "DESCUENTO10", descuento: 0.1 },
+        { id: 2, codigo: "OFERTA20", descuento: 0.2 }
+    ];
+
+    document.addEventListener('DOMContentLoaded', function () {
+        actualizarTablaVentas();
+
+        if (localStorage.getItem('productosSeleccionados')) {
+            const productosSeleccionados = JSON.parse(localStorage.getItem('productosSeleccionados'));
+            totalVenta = productosSeleccionados.reduce((acc, prod) => acc + prod.total, 0);
+            document.getElementById("totalVenta").textContent = totalVenta.toFixed(2);
+
+            productosSeleccionados.forEach(producto => {
+                agregarProductoATabla(producto);
+            });
+        }
+    });
+
+    function agregarProducto() {
+        const producto = document.getElementById("producto");
+        const cantidad = document.getElementById("cantidad").value;
+        const precio = parseFloat(producto.options[producto.selectedIndex].dataset.precio);
+
+        if (cantidad > 0 && producto.selectedIndex !== 0) {
+            const total = precio * cantidad;
+            totalVenta += total;
+
+            const productoSeleccionado = {
+                nombre: producto.options[producto.selectedIndex].text,
+                cantidad: cantidad,
+                precio: precio,
+                total: total
+            };
+
+            let productosSeleccionados = JSON.parse(localStorage.getItem('productosSeleccionados')) || [];
+            productosSeleccionados.push(productoSeleccionado);
+            localStorage.setItem('productosSeleccionados', JSON.stringify(productosSeleccionados));
+
+            document.getElementById("totalVenta").textContent = totalVenta.toFixed(2);
+
+            agregarProductoATabla(productoSeleccionado);
+        } else {
+            alert("Seleccione un producto válido y una cantidad mayor a 0.");
+        }
+    }
+
+    function agregarProductoATabla(producto) {
+        const fila = `
+            <tr>
+                <td>${producto.nombre}</td>
+                <td>${producto.cantidad}</td>
+                <td>${producto.precio.toFixed(2)}</td>
+                <td>${producto.total.toFixed(2)}</td>
+                <td>
+                    <button class="btn btn-danger btn-sm" onclick="eliminarProducto(this, ${producto.total})">Eliminar</button>
+                </td>
+            </tr>
+        `;
+        document.querySelector("#tablaProductos tbody").insertAdjacentHTML("beforeend", fila);
+    }
+
+    function eliminarProducto(button, total) {
+        totalVenta -= total;
+        button.closest("tr").remove();
+        document.getElementById("totalVenta").textContent = totalVenta.toFixed(2);
+
+        let productosSeleccionados = JSON.parse(localStorage.getItem('productosSeleccionados'));
+        const index = Array.from(button.closest("tr").parentNode.children).indexOf(button.closest("tr"));
+        productosSeleccionados.splice(index, 1);
+        localStorage.setItem('productosSeleccionados', JSON.stringify(productosSeleccionados));
+    }
+
+    function aplicarCupon() {
+        if (totalVenta > 0) {
+            const cupon = cuponesDisponibles[0];
+            if (cupon) {
+                const descuento = totalVenta * cupon.descuento;
+                totalVenta -= descuento;
+                document.getElementById("totalVenta").textContent = totalVenta.toFixed(2);
+                alert(`Se aplicó un descuento de ${cupon.descuento * 100}% (${cupon.codigo}).`);
+            }
+        }
+    }
+
+    function guardarVenta() {
+        if (totalVenta > 0) {
+            aplicarCupon();
+            const cliente = document.getElementById("cliente").options[document.getElementById("cliente").selectedIndex].text;
+
+            const productos = [];
+            const rows = document.querySelectorAll("#tablaProductos tbody tr");
+            rows.forEach(row => {
+                const producto = row.cells[0].textContent;
+                const cantidad = row.cells[1].textContent;
+                productos.push(`${producto} (x${cantidad})`);
+            });
+
+            const venta = {
+                id: idVenta++,
+                fecha: new Date().toLocaleString(),
+                cliente: cliente,
+                productos: productos.join(", "),
+                total: totalVenta.toFixed(2)
+            };
+
+            ventas.push(venta);
+            localStorage.setItem('ventas', JSON.stringify(ventas));
+
+            localStorage.removeItem('productosSeleccionados');
+            document.getElementById("totalVenta").textContent = "0";
+            document.querySelector("#tablaProductos tbody").innerHTML = '';
+            actualizarTablaVentas();
+        } else {
+            alert("Debe agregar productos antes de realizar la venta.");
+        }
+    }
+
+    function actualizarTablaVentas() {
+        const tablaVentas = document.querySelector("#tablaVentas tbody");
+        tablaVentas.innerHTML = '';
+        ventas.forEach((venta, index) => {
+            const row = `
+                <tr>
+                    <td>${venta.fecha}</td>
+                    <td>${venta.cliente}</td>
+                    <td>${venta.productos}</td>
+                    <td>${venta.total}</td>
+                    <td>
+                        <button class="btn btn-custom mt-3" onclick="imprimirFactura(${index})">Factura</button>
+                    </td>
+                </tr>
+            `;
+            tablaVentas.insertAdjacentHTML("beforeend", row);
+        });
+    }
+
+    function imprimirFactura(index) {
+        const venta = ventas[index];
+        const factura = `
+            <html>
+            <head>
+                <style>
+                    body { font-family: Arial, sans-serif; margin: 20px; padding: 0; color: #333; background-color: #f9f9f9; }
+                    .factura-container { width: 100%; max-width: 600px; margin: 0 auto; padding: 20px; background-color: white; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); }
+                    .encabezado { text-align: center; border-bottom: 2px solid #e74c3c; padding-bottom: 10px; margin-bottom: 20px; }
+                    .encabezado h1 { margin: 0; font-size: 24px; color: #e74c3c; }
+                    .detalle { margin: 15px 0; }
+                    .productos { margin: 20px 0; }
+                    .productos ul { padding-left: 20px; }
+                    .total { text-align: right; font-size: 18px; color: #27ae60; margin-top: 20px; }
+                </style>
+            </head>
+            <body>
+                <div class="factura-container">
+                    <div class="encabezado">
+                        <h1>Supermark Don Juan</h1>
+                        <p><strong>NIT:</strong> 900264187</p>
+                        <p><strong>Dirección:</strong> Cll 20 # 4 - 55</p>
+                    </div>
+                    <div class="detalle">
+                        <strong>Fecha:</strong> ${venta.fecha}<br>
+                        <strong>Cliente:</strong> ${venta.cliente}
+                    </div>
+                    <div class="productos">
+                        <strong>Productos:</strong>
+                        <ul>${venta.productos.split(", ").map(producto => `<li>${producto}</li>`).join("")}</ul>
+                    </div>
+                    <div class="total">
+                        <strong>Total a pagar:</strong> $${venta.total}
+                    </div>
+                </div>
+            </body>
+            </html>
+        `;
+        const ventana = window.open("", "Factura", "width=600,height=800");
+        ventana.document.write(factura);
+        ventana.document.close();
+        ventana.print();
+    }
+</script>
+
+</body>
+</html>
+

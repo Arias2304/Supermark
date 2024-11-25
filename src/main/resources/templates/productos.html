@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Supermark - Productos</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/pagesimple.css}">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        /* Personalización botones */
+        .btn-custom {
+            background-color: #a93100;
+            color: white;
+            font-family: 'Roboto', sans-serif;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .btn-custom:hover {
+            background-color: #8c2500;
+        }
+
+        /* Personalización de fondo para formulario y tabla */
+        .fondo-producto {
+            background-color: #fcede8;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        .fondo-listaproducto {
+            background-color: #fcede8;
+            width: 800px;
+            padding: 20px;
+            border-radius: 5px;
+        }
+
+        /* Color de texto general y estilos para títulos */
+        .texto-producto {
+            color: #590000;
+            font-family: 'Roboto', sans-serif;
+        }
+
+        .titulo-principal {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+<div class="container texto-producto mt-custom" style="margin-top: 60px;">
+
+    <h1 class="text-center titulo-principal">GESTIÓN DE PRODUCTOS</h1>
+    <a th:href="@{/index}" class="btn btn-custom mt-3">Volver al inicio</a>
+    <div class="row mt-4">
+    <div class="row">
+        <!-- Formulario para agregar o actualizar producto -->
+        <div class="col-md-6">
+            <div class="card mb-4 fondo-producto">
+                <div class="card-header">Registrar o Actualizar Producto</div>
+                <div class="card-body">
+                    <form th:action="@{/productos/guardar}" th:object="${producto}" method="post">
+                        <div class="form-group">
+                            <label for="codigo">Código</label>
+                            <input type="text" class="form-control" id="codigo" th:field="*{codigo}" placeholder="Ingrese el código del producto" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="nombre">Nombre y unidad de medida</label>
+                            <input type="text" class="form-control" id="nombre" th:field="*{nombre}" placeholder="Ingrese el nombre del producto" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="categoria">Categoría</label>
+                            <input type="text" class="form-control" id="categoria" th:field="*{categoria}" placeholder="Ingrese la categoría" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="cantidad">Cantidad</label>
+                            <input type="number" class="form-control" id="cantidad" th:field="*{cantidad}" placeholder="Ingrese la cantidad" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="venc">Fecha de Vencimiento</label>
+                            <input type="date" class="form-control" id="venc" th:field="*{venc}" placeholder="Ingrese la fecha de vencimiento" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="precio">Precio</label>
+                            <input type="number" class="form-control" id="precio" th:field="*{precio}" placeholder="Ingrese el precio del producto" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="proveedor">Proveedor</label>
+                            <select class="form-control" id="proveedor" th:field="*{proveedor.nit}" required>
+                                <option th:each="prov : ${proveedores}" th:value="${prov.nit}" th:text="${prov.nombre}">Seleccionar proveedor</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-custom">Guardar</button>
+                    </form>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Tabla de productos -->
+        <div class="col-md-6">
+            <div class="card mb-4 fondo-listaproducto">
+                <h2 class="text-center">Lista de Productos</h2>
+                <table class="table table-bordered table-striped">
+                    <thead>
+                    <tr>
+                        <th>Código</th>
+                        <th>Nombre</th>
+                        <th>Categoría</th>
+                        <th>Cantidad</th>
+                        <th>Fecha de Vencimiento</th>
+                        <th>Precio</th>
+                        <th>Proveedor</th>
+                        <th>Acciones</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="producto : ${misproductos}">
+                        <td th:text="${producto.codigo}"></td>
+                        <td th:text="${producto.nombre}"></td>
+                        <td th:text="${producto.categoria}"></td>
+                        <td th:text="${producto.cantidad}"></td>
+                        <td th:text="${producto.venc}"></td>
+                        <td th:text="${producto.precio}"></td>
+                        <td th:text="${producto.proveedor.nombre}"></td>
+                        <td>
+                            <th:block th:if="${producto.alerta}">
+                                <span class="badge badge-danger">Bajo Stock/Próximo vencimiento</span>
+                            </th:block>
+                            <a th:href="@{/productos/editar/{codigo}(codigo=${producto.codigo})}" class="btn btn-warning btn-sm">Editar</a>
+                            <a th:href="@{/productos/eliminar/{codigo}(codigo=${producto.codigo})}" class="btn btn-danger btn-sm" onclick="return confirm('¿Seguro de que desea eliminar este producto?');">Eliminar</a>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+        </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
